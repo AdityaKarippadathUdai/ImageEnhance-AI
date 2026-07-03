@@ -1,0 +1,6 @@
+{
+  "name": "PixelBoost AI",
+  "description": "Premium AI SaaS frontend for AI Image Super Resolution, featuring real-time image comparison, interactive upscale parameters, and smooth animations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
