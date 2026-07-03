@@ -120,32 +120,6 @@ export default function App() {
                   </button>
                 </motion.div>
 
-                {/* Authority Logos */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1, delay: 0.4 }}
-                  className="w-full"
-                >
-                  <p className="text-[10px] font-mono uppercase font-bold tracking-widest text-slate-500 mb-6">
-                    TRUSTED BY DESIGNERS AT LEADING CREATIVE TEAMS
-                  </p>
-                  <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 text-slate-400 text-xs font-semibold font-mono tracking-wider opacity-60">
-                    <span className="hover:text-white transition-colors cursor-default flex items-center gap-1">
-                      <Layers className="w-4 h-4 text-blue-500" /> PIXAR_STUDIOS
-                    </span>
-                    <span className="hover:text-white transition-colors cursor-default flex items-center gap-1">
-                      <Zap className="w-4 h-4 text-amber-500" /> EPIC_GAMES
-                    </span>
-                    <span className="hover:text-white transition-colors cursor-default flex items-center gap-1">
-                      <Cpu className="w-4 h-4 text-teal-500" /> NETFLIX_RE
-                    </span>
-                    <span className="hover:text-white transition-colors cursor-default flex items-center gap-1">
-                      <Code className="w-4 h-4 text-cyan-400" /> FIGMA_LABS
-                    </span>
-                  </div>
-                </motion.div>
-
               </div>
             </section>
 
