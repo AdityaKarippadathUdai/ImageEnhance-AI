@@ -127,7 +127,7 @@ export default function Header({ currentView = 'home', onNavigate }: HeaderProps
     >
       <div className="max-w-7xl mx-auto px-4 md:px-8 flex items-center justify-between">
         
-        {/* LEFT: PixelBoost AI Brand Logo */}
+        {/* LEFT: ImageEnhancer AI Brand Logo */}
         <div 
           onClick={() => handleNavItemClick('hero', 'home')} 
           className="flex items-center gap-2.5 cursor-pointer select-none group"
@@ -136,7 +136,7 @@ export default function Header({ currentView = 'home', onNavigate }: HeaderProps
             <Layers className="w-4.5 h-4.5 text-white" />
           </div>
           <span className="text-sm font-bold tracking-tight text-white font-sans flex items-center gap-1.5">
-            PixelBoost
+            ImageEnhancer
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] to-[#14B8A6] font-mono text-[10px] font-bold tracking-normal border border-blue-500/35 px-1.5 py-0.5 rounded-md bg-blue-500/5">
               AI
             </span>

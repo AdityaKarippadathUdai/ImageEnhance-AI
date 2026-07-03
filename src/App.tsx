@@ -69,7 +69,7 @@ export default function App() {
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-turquoise-500"></span>
                   </span>
                   <span className="text-[10px] uppercase font-mono tracking-wider text-slate-400 font-bold mr-1">NEW RELEASE</span>
-                  PixelBoost Core v2.4 (ESRGAN-v4 weights online)
+                  ImageEnhancer Core v2.4 (ESRGAN-v4 weights online)
                   <ArrowRight className="w-3 h-3 text-slate-500 ml-0.5" />
                 </motion.div>
 
