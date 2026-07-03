@@ -181,7 +181,7 @@ export default function Header({
           
           {/* Centered GitHub nav link */}
           <a
-            href="https://github.com"
+            href="https://github.com/AdityaKarippadathUdai/ImageEnhance-AI"
             target="_blank"
             rel="noopener noreferrer"
             className="px-4 py-2 text-xs font-semibold tracking-wide text-slate-600 dark:text-[#CBD5E1] hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1 font-sans"
@@ -217,7 +217,7 @@ export default function Header({
           {/* GitHub CTA Button */}
           <a
             id="nav-github-cta"
-            href="https://github.com"
+            href="https://github.com/AdityaKarippadathUdai/ImageEnhance-AI"
             target="_blank"
             rel="noopener noreferrer"
             className="h-9 px-4 rounded-xl font-bold text-xs tracking-wider uppercase text-white bg-[#0F172A] hover:bg-[#1E293B] dark:bg-slate-900 border border-transparent dark:border-white/10 dark:hover:border-blue-500/35 dark:hover:bg-slate-800 transition-all flex items-center gap-2 cursor-pointer shadow-md"
@@ -280,7 +280,7 @@ export default function Header({
               })}
               
               <a
-                href="https://github.com"
+                href="https://github.com/AdityaKarippadathUdai/ImageEnhance-AI"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="py-2 text-sm font-semibold tracking-wide text-slate-600 dark:text-slate-300 border-b border-slate-100 dark:border-white/5 pb-2 flex items-center justify-between"
@@ -290,7 +290,7 @@ export default function Header({
               </a>
 
               <a
-                href="https://github.com"
+                href="https://github.com/AdityaKarippadathUdai/ImageEnhance-AI"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-2 w-full py-3 rounded-xl bg-[#0F172A] hover:bg-[#1E293B] dark:bg-slate-900 border border-transparent dark:border-white/10 text-center font-bold text-xs tracking-wider uppercase text-white flex items-center justify-center gap-2"

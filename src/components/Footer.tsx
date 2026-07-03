@@ -101,7 +101,7 @@ export default function Footer({ onNavigate }: FooterProps) {
                   </a>
                 </li>
                 <li>
-                  <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+                  <a href="https://github.com/AdityaKarippadathUdai/ImageEnhance-AI" target="_blank" rel="noopener noreferrer" className="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
                     <Github className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     GitHub Repository
                   </a>
