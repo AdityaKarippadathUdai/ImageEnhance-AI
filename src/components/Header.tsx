@@ -42,36 +42,16 @@ export default function Header() {
           >
             Features
           </button>
-          <button 
-            onClick={() => scrollToSection('api-bench')} 
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            Developer API
-          </button>
-          <button 
-            onClick={() => scrollToSection('pricing')} 
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            Pricing
-          </button>
-          <button 
-            onClick={() => scrollToSection('faq')} 
-            className="hover:text-white transition-colors cursor-pointer"
-          >
-            FAQs
-          </button>
         </nav>
 
-        {/* Call to Action & User Status Pill */}
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-[#FBBF24]/10 border border-[#FBBF24]/20 rounded-full">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#FBBF24] shadow-[0_0_8px_#FBBF24]"></div>
-            <span className="text-[9px] uppercase tracking-widest font-bold text-[#FBBF24]">Pro Member</span>
-          </div>
-
-          <div className="w-8 h-8 rounded-full border border-white/10 bg-[#111827] flex items-center justify-center text-xs font-bold text-white shadow-sm select-none">
-            JD
-          </div>
+        {/* Call to Action button */}
+        <div className="flex items-center gap-3">
+          <button 
+            onClick={() => scrollToSection('playground')}
+            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wide text-white bg-[#111827] border border-white/10 hover:border-white/20 hover:bg-[#1f2937] transition-all cursor-pointer"
+          >
+            Launch Playground
+          </button>
         </div>
       </div>
     </header>

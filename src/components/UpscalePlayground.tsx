@@ -104,7 +104,7 @@ export default function UpscalePlayground() {
       if (currentStep >= totalSteps) {
         setIsProcessing(false);
         setHasProcessed(true);
-        setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Super-resolution complete! Upscaled output generated in ${(scaleFactor === 8 ? 4.2 : 3.1)}s`]);
+        setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Super-resolution complete! Upscaled output generated in 3.1s`]);
         setProgress(100);
         return;
       }
@@ -274,8 +274,8 @@ export default function UpscalePlayground() {
                 <label className="text-xs font-medium text-[#CBD5E1] block mb-2 font-sans">
                   Scale Factor
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {[2, 4, 8].map((factor) => (
+                <div className="grid grid-cols-2 gap-2">
+                  {[2, 4].map((factor) => (
                     <button
                       key={factor}
                       onClick={() => setScaleFactor(factor)}
@@ -285,7 +285,7 @@ export default function UpscalePlayground() {
                           : 'bg-[#020617] border-white/10 text-slate-400 hover:border-white/20 font-sans'
                       }`}
                     >
-                      {factor}x {factor === 8 && <span className="text-[9px] text-[#FBBF24] ml-0.5 font-bold">PRO</span>}
+                      {factor}x
                     </button>
                   ))}
                 </div>

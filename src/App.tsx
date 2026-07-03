@@ -4,9 +4,6 @@ import { Sparkles, ArrowRight, Play, Eye, Layers, Zap, Cpu, Code } from 'lucide-
 import Header from './components/Header';
 import UpscalePlayground from './components/UpscalePlayground';
 import BentoFeatures from './components/BentoFeatures';
-import ApiPlayground from './components/ApiPlayground';
-import PricingTable from './components/PricingTable';
-import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -90,10 +87,10 @@ export default function App() {
             </button>
             <button
               id="hero-secondary-cta"
-              onClick={() => scrollToSection('pricing')}
+              onClick={() => scrollToSection('features')}
               className="w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-xs tracking-wider uppercase text-white bg-slate-900 border border-white/10 hover:border-white/20 hover:bg-slate-800 transition-all cursor-pointer flex items-center justify-center gap-1.5"
             >
-              View Developer Pricing
+              Explore Core Features
             </button>
           </motion.div>
 
@@ -131,15 +128,6 @@ export default function App() {
 
       {/* BENTO CAPABILITIES/FEATURES */}
       <BentoFeatures />
-
-      {/* DEVELOPER API TEST-BENCH / SANDBOX */}
-      <ApiPlayground />
-
-      {/* MEMBERSHIP PLANS */}
-      <PricingTable />
-
-      {/* FREQUENTLY ASKED QUESTIONS */}
-      <FAQSection />
 
       {/* GLOBAL FOOTER */}
       <Footer />

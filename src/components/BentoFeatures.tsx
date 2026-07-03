@@ -34,7 +34,7 @@ export default function BentoFeatures() {
                 <Sparkles className="w-5 h-5" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2">
-                Up to 8x Geometric Synthesis
+                Up to 4x Geometric Synthesis
               </h3>
               <p className="text-xs text-slate-400 leading-relaxed max-w-md">
                 Uncover lost pixels. Our proprietary deep network infers high-frequency features (like foliage, mountain ridges, and hair details) to expand low-resolution assets into high-resolution displays.
@@ -43,7 +43,7 @@ export default function BentoFeatures() {
 
             {/* Simulated UI block */}
             <div className="mt-6 p-4 bg-[#020617]/80 border border-white/10 rounded-xl font-mono text-[10px] text-slate-500 flex flex-wrap gap-4 items-center justify-between">
-              <span className="text-slate-300">Scale Mode: <strong className="text-cyan-400">8.00x Ultra-Zoom</strong></span>
+              <span className="text-slate-300">Scale Mode: <strong className="text-cyan-400">4.00x Ultra-Zoom</strong></span>
               <span className="text-slate-300">GPU Workers: <strong className="text-emerald-400">Active (Warm)</strong></span>
               <div className="flex items-center gap-1">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>

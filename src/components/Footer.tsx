@@ -77,19 +77,19 @@ export default function Footer() {
               <ul className="flex flex-col gap-2.5 text-xs text-slate-400 font-medium">
                 <li><a href="#playground" className="hover:text-white transition-colors">Core Playground</a></li>
                 <li><a href="#features" className="hover:text-white transition-colors">Model Specifications</a></li>
-                <li><a href="#pricing" className="hover:text-white transition-colors">Pricing Tiers</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Compare Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Showcase</a></li>
               </ul>
             </div>
 
             {/* Col 2 */}
             <div>
-              <h4 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 mb-4">Developers</h4>
+              <h4 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 mb-4">Resources</h4>
               <ul className="flex flex-col gap-2.5 text-xs text-slate-400 font-medium">
-                <li><a href="#api-bench" className="hover:text-white transition-colors">REST API Spec</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Python SDK</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">GitHub Actions</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Cluster Status</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Restoration Guide</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Lossless Formats</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Platform Status</a></li>
               </ul>
             </div>
 
