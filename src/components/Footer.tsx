@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { Layers, Mail, Check, ArrowUp } from 'lucide-react';
 
-export default function Footer() {
+interface FooterProps {
+  onNavigate?: (view: string) => void;
+}
+
+export default function Footer({ onNavigate }: FooterProps) {
   const [email, setEmail] = useState<string>('');
   const [subscribed, setSubscribed] = useState<boolean>(false);
 
@@ -15,6 +19,14 @@ export default function Footer() {
 
   const scrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLinkClick = (e: React.MouseEvent, viewName: string) => {
+    if (onNavigate) {
+      e.preventDefault();
+      onNavigate(viewName);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -75,10 +87,10 @@ export default function Footer() {
             <div>
               <h4 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 mb-4">Product</h4>
               <ul className="flex flex-col gap-2.5 text-xs text-slate-400 font-medium">
-                <li><a href="#playground" className="hover:text-white transition-colors">Core Playground</a></li>
-                <li><a href="#features" className="hover:text-white transition-colors">Model Specifications</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Compare Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Showcase</a></li>
+                <li><a href="#playground" onClick={(e) => handleLinkClick(e, 'home')} className="hover:text-white transition-colors">Core Playground</a></li>
+                <li><a href="#features" onClick={(e) => handleLinkClick(e, 'features')} className="hover:text-white transition-colors">Model Specifications</a></li>
+                <li><a href="#technology" onClick={(e) => handleLinkClick(e, 'technology')} className="hover:text-white transition-colors">Compare Features</a></li>
+                <li><a href="#home" onClick={(e) => handleLinkClick(e, 'home')} className="hover:text-white transition-colors">Showcase</a></li>
               </ul>
             </div>
 

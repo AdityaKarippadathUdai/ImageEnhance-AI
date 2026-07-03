@@ -2,11 +2,18 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Layers, Sparkles, Sun, Moon, Github, Menu, X, ExternalLink } from 'lucide-react';
 
-export default function Header() {
-  const [activeSection, setActiveSection] = useState<string>('home');
+interface HeaderProps {
+  currentView?: string;
+  onNavigate?: (view: string) => void;
+}
+
+export default function Header({ currentView = 'home', onNavigate }: HeaderProps) {
+  const [localActiveSection, setLocalActiveSection] = useState<string>('home');
   const [isThemeDark, setIsThemeDark] = useState<boolean>(true); // toggles dark theme sub-variants
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [hasScrolled, setHasScrolled] = useState<boolean>(false);
+
+  const activeSection = onNavigate ? currentView : localActiveSection;
 
   // Monitor scroll height to apply sticky background opacity changes (glass transition)
   useEffect(() => {
@@ -19,6 +26,8 @@ export default function Header() {
 
   // Set up active section tracking via IntersectionObserver
   useEffect(() => {
+    if (onNavigate) return; // Disable observer if custom page-based routing is active
+
     const sections = ['hero', 'features', 'playground'];
     const observerOptions = {
       root: null,
@@ -30,11 +39,11 @@ export default function Header() {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           if (entry.target.id === 'hero') {
-            setActiveSection('home');
+            setLocalActiveSection('home');
           } else if (entry.target.id === 'features') {
-            setActiveSection('features');
+            setLocalActiveSection('features');
           } else if (entry.target.id === 'playground') {
-            setActiveSection('technology');
+            setLocalActiveSection('technology');
           }
         }
       });
@@ -52,11 +61,11 @@ export default function Header() {
         if (el) observer.unobserve(el);
       });
     };
-  }, []);
+  }, [onNavigate]);
 
   const scrollToSection = (id: string, sectionName: string) => {
     setIsMobileMenuOpen(false);
-    setActiveSection(sectionName);
+    setLocalActiveSection(sectionName);
     
     if (id === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -75,6 +84,16 @@ export default function Header() {
         top: offsetPosition,
         behavior: 'smooth'
       });
+    }
+  };
+
+  const handleNavItemClick = (targetId: string, sectionName: string) => {
+    setIsMobileMenuOpen(false);
+    if (onNavigate) {
+      onNavigate(sectionName);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      scrollToSection(targetId, sectionName);
     }
   };
 
@@ -110,7 +129,7 @@ export default function Header() {
         
         {/* LEFT: PixelBoost AI Brand Logo */}
         <div 
-          onClick={() => scrollToSection('hero', 'home')} 
+          onClick={() => handleNavItemClick('hero', 'home')} 
           className="flex items-center gap-2.5 cursor-pointer select-none group"
         >
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#2563EB] to-[#14B8A6] flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 group-hover:shadow-blue-500/45 transition-all duration-300">
@@ -131,7 +150,7 @@ export default function Header() {
             return (
               <button
                 key={item.name}
-                onClick={() => scrollToSection(item.target, item.section)}
+                onClick={() => handleNavItemClick(item.target, item.section)}
                 className={`relative px-4 py-2 text-xs font-semibold tracking-wide transition-colors cursor-pointer select-none font-sans ${
                   isActive ? 'text-[#FBBF24]' : 'text-[#CBD5E1] hover:text-white'
                 }`}
@@ -235,7 +254,7 @@ export default function Header() {
                 return (
                   <button
                     key={item.name}
-                    onClick={() => scrollToSection(item.target, item.section)}
+                    onClick={() => handleNavItemClick(item.target, item.section)}
                     className={`py-2 text-sm font-semibold tracking-wide text-left flex items-center justify-between border-b border-white/5 pb-2 ${
                       isActive ? 'text-[#FBBF24]' : 'text-slate-300'
                     }`}
