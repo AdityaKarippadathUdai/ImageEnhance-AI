@@ -493,6 +493,40 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                     <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
                       <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-slate-200 dark:text-white/5" />
                     </pattern>
+
+                    {/* Arrow Marker Definitions */}
+                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
+                    </marker>
+                    <marker id="arrow-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#14B8A6" />
+                    </marker>
+                    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981" />
+                    </marker>
+                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#EF4444" />
+                    </marker>
+                    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B" />
+                    </marker>
+                    <marker id="arrow-blue-small" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
+                    </marker>
+
+                    {/* Gradient Definitions */}
+                    <linearGradient id="flowBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#2563EB" />
+                      <stop offset="100%" stopColor="#14B8A6" />
+                    </linearGradient>
+                    <linearGradient id="flowTeal" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#14B8A6" />
+                      <stop offset="100%" stopColor="#10B981" />
+                    </linearGradient>
+                    <linearGradient id="flowEmerald" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#10B981" />
+                      <stop offset="100%" stopColor="#059669" />
+                    </linearGradient>
                   </defs>
                   <rect width="600" height="380" fill="url(#diagGrid)" rx="16" />
 
@@ -586,40 +620,7 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                     <text x="240" y="330" textAnchor="middle" className="text-[9px] font-sans font-bold fill-slate-600 dark:fill-slate-400">VGG Loss</text>
                   </g>
 
-                  {/* Arrow Marker Definitions */}
-                  <g>
-                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
-                    </marker>
-                    <marker id="arrow-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#14B8A6" />
-                    </marker>
-                    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981" />
-                    </marker>
-                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#EF4444" />
-                    </marker>
-                    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B" />
-                    </marker>
-                    <marker id="arrow-blue-small" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
-                    </marker>
-
-                    <linearGradient id="flowBlue" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#2563EB" />
-                      <stop offset="100%" stopColor="#14B8A6" />
-                    </linearGradient>
-                    <linearGradient id="flowTeal" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#14B8A6" />
-                      <stop offset="100%" stopColor="#10B981" />
-                    </linearGradient>
-                    <linearGradient id="flowEmerald" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#10B981" />
-                      <stop offset="100%" stopColor="#059669" />
-                    </linearGradient>
-                  </g>
+                  {/* Defs consolidated at the top */}
                 </svg>
               </div>
 
