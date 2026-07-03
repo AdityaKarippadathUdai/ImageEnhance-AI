@@ -87,15 +87,6 @@ export default function App() {
                 </motion.h1>
 
                 {/* Subheading */}
-                <motion.p
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="text-sm sm:text-base md:text-lg text-slate-400 max-w-2xl leading-relaxed mb-10 font-sans"
-                >
-                  Synthesize lost textures, restore facial symmetry, and eliminate compression artifacts instantly. Engineered on A100-GPU grids for ultra-low latency creative pipelines.
-                </motion.p>
-
                 {/* Call to Actions */}
                 <motion.div
                   initial={{ opacity: 0, y: 15 }}
