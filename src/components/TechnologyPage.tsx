@@ -533,13 +533,13 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   {/* Flow links (Arrows) */}
                   <g stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-white/10">
                     {/* LowRes to Preprocess */}
-                    <path d="M 90,190 L 140,190" stroke="url(#flowBlue)" strokeWidth="3" markerEnd="url(#arrow-blue)" />
+                    <path d="M 90,190 L 140,190" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#arrow-blue)" />
                     {/* Preprocess to Generator */}
-                    <path d="M 210,190 L 255,190" stroke="url(#flowBlue)" strokeWidth="3" markerEnd="url(#arrow-blue)" />
+                    <path d="M 210,190 L 255,190" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#arrow-blue)" />
                     {/* Generator to Upsample */}
-                    <path d="M 335,190 L 380,190" stroke="url(#flowTeal)" strokeWidth="3" markerEnd="url(#arrow-teal)" />
+                    <path d="M 335,190 L 380,190" stroke="#14b8a6" strokeWidth="3" markerEnd="url(#arrow-teal)" />
                     {/* Upsample to HighRes */}
-                    <path d="M 455,190 L 500,190" stroke="url(#flowEmerald)" strokeWidth="3" markerEnd="url(#arrow-emerald)" />
+                    <path d="M 455,190 L 500,190" stroke="#10b981" strokeWidth="3" markerEnd="url(#arrow-emerald)" />
                     
                     {/* Feedback loops during training */}
                     {/* HighRes down to Discriminator */}
