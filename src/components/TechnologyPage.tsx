@@ -19,68 +19,68 @@ const ARCH_NODE_TOOLTIPS: Record<string, { title: string; subtitle: string; desc
     desc: 'Passes raw H × W × 3 float32 RGB pixel tensors into CUDA device memory.',
     metric: 'Input Shape: [1, 3, H, W]',
     color: 'from-blue-500 to-indigo-500',
-    centerX: 55,
-    centerY: 155,
-  },
-  preprocess: {
-    title: 'Preprocessing',
-    subtitle: 'Normalizer Layer',
-    desc: 'Normalizes pixels to stable [0.0, 1.0] float range with reflective mirror-padding.',
-    metric: 'Normalization: RGB / 255.0',
-    color: 'from-teal-500 to-cyan-500',
-    centerX: 175,
-    centerY: 160,
-  },
-  generator: {
-    title: 'RRDB Generator',
-    subtitle: 'Feature Synthesizer',
-    desc: '23 stacked Residual-in-Residual Dense Blocks that generate high-frequency textures.',
-    metric: 'Network Parameters: ~16.7M',
-    color: 'from-teal-500 to-emerald-500',
-    centerX: 295,
+    centerX: 80,
     centerY: 150,
+  },
+  conv: {
+    title: 'Convolution Layer',
+    subtitle: 'Feature Extractor',
+    desc: 'Extracts low-level structural features using 3×3 convolution operations, maps channels to 64 dimensions.',
+    metric: 'Kernel: 3×3 | Strides: 1',
+    color: 'from-blue-500 to-cyan-500',
+    centerX: 205,
+    centerY: 165,
+  },
+  rrdb: {
+    title: 'RRDB Block',
+    subtitle: 'Feature Synthesizer',
+    desc: '23 stacked Residual-in-Residual Dense Blocks without Batch Normalization layers to generate rich textures.',
+    metric: 'Depth: 23 Blocks | Params: ~16.7M',
+    color: 'from-emerald-500 to-green-500',
+    centerX: 385,
+    centerY: 165,
   },
   upsample: {
     title: 'Pixel Shuffle',
     subtitle: 'Upsampling Layer',
-    desc: 'Uses sub-pixel convolution to reorganize channels spatially for ultra-clean scaling.',
-    metric: 'Scale Factor: 2x / 4x Spatial',
-    color: 'from-emerald-500 to-green-500',
-    centerX: 417,
-    centerY: 160,
+    desc: 'Uses sub-pixel convolution to reorganize deep channels spatially for crystal-clear 4x scaling.',
+    metric: 'Algorithm: Sub-Pixel Convolution',
+    color: 'from-amber-500 to-yellow-500',
+    centerX: 652,
+    centerY: 165,
   },
   highres: {
     title: 'Enhanced 4K',
     subtitle: 'Output Stream',
-    desc: 'Clamps and denormalizes features back to sharp 8-bit/16-bit integer RGB channels.',
+    desc: 'Clamps features back to standard [0, 255] integer range to write pristine lossless RGB images.',
     metric: 'Output Shape: [1, 3, 4H, 4W]',
     color: 'from-emerald-500 to-teal-500',
-    centerX: 535,
-    centerY: 155,
+    centerX: 897,
+    centerY: 150,
   },
   discriminator: {
     title: 'Discriminator',
     subtitle: 'Adversarial Judge',
-    desc: 'A Relativistic average network scoring generated textures against high-resolution targets.',
+    desc: 'A relativistic CNN evaluating whether real database photos are more realistic than generated frames.',
     metric: 'Formulation: Relativistic GAN',
-    color: 'from-red-500 to-rose-600',
-    centerX: 410,
-    centerY: 265,
+    color: 'from-purple-500 to-indigo-600',
+    centerX: 485,
+    centerY: 385,
   },
-  loss: {
-    title: 'VGG Perceptual Loss',
-    subtitle: 'Optimization Criterion',
-    desc: 'Compares activation patterns from VGG-19 deep feature layers instead of pure pixels.',
-    metric: 'Active Layer: conv4_4 activation',
-    color: 'from-amber-500 to-orange-500',
-    centerX: 240,
-    centerY: 265,
+  skip: {
+    title: 'Skip Connections',
+    subtitle: 'Gradient Highway',
+    desc: 'Sums low-frequency identity features directly into upscaling states to preserve global shapes and colors.',
+    metric: 'Operation: Element-wise addition (+)',
+    color: 'from-teal-500 to-cyan-500',
+    centerX: 545,
+    centerY: 155,
   },
 };
 
 export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
   // Section 2: Architecture interactive node selector
-  const [activeArchNode, setActiveArchNode] = useState<string>('generator');
+  const [activeArchNode, setActiveArchNode] = useState<string>('rrdb');
   const [hoveredArchNode, setHoveredArchNode] = useState<string | null>(null);
 
   // Section 5: Why ESRGAN - Interactive slider state
@@ -527,218 +527,369 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
            ============================================== */}
         <section className="py-20 border-b border-slate-200 dark:border-white/10 text-left">
           <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
-            <span className="text-[10px] font-mono uppercase font-bold tracking-widest text-[#2563EB]">Neural Network Topology</span>
+            <span className="text-[10px] font-mono uppercase font-bold tracking-widest text-[#2563EB] bg-blue-500/10 px-3 py-1 rounded-full">Model Architecture</span>
             <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-slate-900 dark:text-white">
-              ESRGAN Generator-Discriminator Stack
+              ESRGAN Architecture Diagram
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-sans">
-              Click the model modules in the flow diagram below to analyze how tensors propagate, weights are updated, and features are computed in real time.
+            <p className="text-sm text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed font-sans">
+              ESRGAN consists of a generator network for image super-resolution and a discriminator network for adversarial training. The generator uses Residual-in-Residual Dense Blocks (RRDB) to recover rich textures and details.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            
-            {/* Interactive SVG Diagram (7 Cols) */}
-            <div className="lg:col-span-7 bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm min-h-[460px]">
-              
-              {/* Diagram Header */}
+          <div className="space-y-10">
+            {/* Interactive SVG Diagram Container */}
+            <div className="bg-slate-50 dark:bg-slate-950/40 border border-slate-200 dark:border-white/5 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-sm relative overflow-hidden">
+              {/* Diagram Header Banner */}
               <div className="flex justify-between items-center border-b border-slate-200 dark:border-white/10 pb-3 mb-6">
                 <span className="text-[10px] font-mono font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
                   <Network className="w-3.5 h-3.5 text-blue-500" />
-                  Interactive Topology Graph
+                  Interactive ESRGAN Flowchart
                 </span>
                 <span className="text-[9px] px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono font-bold">
                   FP32_WEIGHTS_LIVE
                 </span>
               </div>
 
-              {/* Responsive SVG Flowchart */}
+              {/* SVG Block */}
               <div className="w-full relative flex items-center justify-center">
-                <svg className="w-full max-w-xl aspect-[16/10]" viewBox="0 0 600 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-full max-w-5xl aspect-[1000/520]" viewBox="0 0 1000 520" fill="none" xmlns="http://www.w3.org/2000/svg">
                   {/* Background Grid Pattern inside Diagram */}
                   <defs>
-                    <pattern id="diagGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <pattern id="diagGridDetailed" width="20" height="20" patternUnits="userSpaceOnUse">
                       <path d="M 20 0 L 0 0 0 20" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-slate-200 dark:text-white/5" />
                     </pattern>
 
                     {/* Arrow Marker Definitions */}
-                    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <marker id="arrow-blue-det" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
                     </marker>
-                    <marker id="arrow-teal" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#14B8A6" />
-                    </marker>
-                    <marker id="arrow-emerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <marker id="arrow-green-det" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 1 L 10 5 L 0 9 z" fill="#10B981" />
                     </marker>
-                    <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#EF4444" />
-                    </marker>
-                    <marker id="arrow-amber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <marker id="arrow-yellow-det" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
                       <path d="M 0 1 L 10 5 L 0 9 z" fill="#F59E0B" />
                     </marker>
-                    <marker id="arrow-blue-small" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#3B82F6" />
+                    <marker id="arrow-purple-det" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M 0 1 L 10 5 L 0 9 z" fill="#8B5CF6" />
                     </marker>
-
-                    {/* Gradient Definitions */}
-                    <linearGradient id="flowBlue" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#2563EB" />
-                      <stop offset="100%" stopColor="#14B8A6" />
-                    </linearGradient>
-                    <linearGradient id="flowTeal" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#14B8A6" />
-                      <stop offset="100%" stopColor="#10B981" />
-                    </linearGradient>
-                    <linearGradient id="flowEmerald" x1="0%" y1="0%" x2="100%" y2="0%">
-                      <stop offset="0%" stopColor="#10B981" />
-                      <stop offset="100%" stopColor="#059669" />
-                    </linearGradient>
                   </defs>
-                  <rect width="600" height="380" fill="url(#diagGrid)" rx="16" />
 
-                  {/* Flow links (Arrows) */}
-                  <g stroke="currentColor" strokeWidth="2" className="text-slate-400 dark:text-white/10">
-                    {/* LowRes to Preprocess */}
-                    <path d="M 90,190 L 140,190" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#arrow-blue)" />
-                    {/* Preprocess to Generator */}
-                    <path d="M 210,190 L 255,190" stroke="#3b82f6" strokeWidth="3" markerEnd="url(#arrow-blue)" />
-                    {/* Generator to Upsample */}
-                    <path d="M 335,190 L 380,190" stroke="#14b8a6" strokeWidth="3" markerEnd="url(#arrow-teal)" />
-                    {/* Upsample to HighRes */}
-                    <path d="M 455,190 L 500,190" stroke="#10b981" strokeWidth="3" markerEnd="url(#arrow-emerald)" />
-                    
-                    {/* Feedback loops during training */}
-                    {/* HighRes down to Discriminator */}
-                    <path d="M 525,215 L 525,290 L 450,290" stroke="#EF4444" strokeWidth="1.5" strokeDasharray="4 4" markerEnd="url(#arrow-red)" />
-                    {/* Discriminator to Perceptual Loss */}
-                    <path d="M 370,290 L 270,290" stroke="#F59E0B" strokeWidth="1.5" strokeDasharray="4 4" markerEnd="url(#arrow-amber)" />
-                    {/* Perceptual Loss feedback to Generator */}
-                    <path d="M 210,290 L 180,290 L 180,220" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="4 4" markerEnd="url(#arrow-blue-small)" />
+                  <rect width="1000" height="520" fill="url(#diagGridDetailed)" rx="20" />
+
+                  {/* Flow Links (Arrows) with Hex colors to resolve rendering across all clients */}
+                  <g strokeWidth="2.5">
+                    {/* LowRes to G input */}
+                    <path d="M 145,150 L 180,150" stroke="#3B82F6" markerEnd="url(#arrow-blue-det)" />
+                    {/* G Conv 3x3 to RRDB */}
+                    <path d="M 225,150 L 240,150" stroke="#3B82F6" markerEnd="url(#arrow-blue-det)" strokeDasharray="3 3" />
+                    {/* RRDB block internal link to output */}
+                    <path d="M 525,150 L 535,150" stroke="#10B981" />
+                    {/* Sum (+) to Conv 3x3 */}
+                    <path d="M 555,150 L 570,150" stroke="#3B82F6" markerEnd="url(#arrow-blue-det)" />
+                    {/* Conv 3x3 to Upsample 1 */}
+                    <path d="M 610,150 L 625,150" stroke="#3B82F6" markerEnd="url(#arrow-blue-det)" />
+                    {/* Upsample 1 to Upsample 2 */}
+                    <path d="M 665,150 L 680,150" stroke="#F59E0B" markerEnd="url(#arrow-yellow-det)" />
+                    {/* Upsample 2 to Conv 3x3 */}
+                    <path d="M 720,150 L 735,150" stroke="#F59E0B" markerEnd="url(#arrow-yellow-det)" />
+                    {/* Conv 3x3 output of G to HighRes card */}
+                    <path d="M 775,150 L 820,150" stroke="#10B981" markerEnd="url(#arrow-green-det)" />
+
+                    {/* Adversarial feedback dotted lines */}
+                    <path d="M 205,110 L 205,25" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <path d="M 205,25 L 485,25" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <path d="M 485,25 L 485,290" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <path d="M 755,110 L 755,25" stroke="#8B5CF6" strokeWidth="1.5" strokeDasharray="4 4" />
                   </g>
 
-                  {/* Node 1: Low Res Image Input */}
+                  {/* Adversarial feedback label */}
+                  <rect x="420" y="15" width="130" height="20" rx="6" fill="#8B5CF6" />
+                  <text x="485" y="28" textAnchor="middle" fill="#FFFFFF" className="text-[9px] font-mono font-bold tracking-wider uppercase">Adversarial Feedback</text>
+
+                  {/* 1. Low Resolution Input Card */}
                   <g 
-                    className="cursor-pointer" 
+                    className="cursor-pointer"
                     onClick={() => setActiveArchNode('lowres')}
                     onMouseEnter={() => setHoveredArchNode('lowres')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="20" y="155" width="70" height="70" rx="12" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'lowres' ? '#2563EB' : 'currentColor'} strokeWidth={activeArchNode === 'lowres' ? '3' : '1'} />
-                    <circle cx="55" cy="190" r="15" fill="#3B82F6" fillOpacity="0.1" />
-                    <foreignObject x="43" y="178" width="24" height="24">
-                      <ImageIcon className={`w-6 h-6 ${activeArchNode === 'lowres' ? 'text-blue-500' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="55" y="245" textAnchor="middle" className="text-[10px] font-sans font-bold fill-slate-700 dark:fill-slate-300">Low-Res</text>
+                    <rect x="15" y="55" width="130" height="190" rx="16" fill="white" className="dark:fill-[#0B0F19]" stroke={activeArchNode === 'lowres' ? '#3B82F6' : '#E2E8F0'} strokeWidth={activeArchNode === 'lowres' ? '3' : '1.5'} style={{ stroke: activeArchNode === 'lowres' ? '#3B82F6' : 'rgba(148,163,184,0.15)' }} />
+                    <text x="80" y="80" textAnchor="middle" className="text-[10px] font-bold fill-blue-600 dark:fill-blue-400 font-sans">Low Resolution</text>
+                    <text x="80" y="94" textAnchor="middle" className="text-[10px] font-bold fill-blue-600 dark:fill-blue-400 font-sans">Input Image</text>
+                    <image 
+                      href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=200" 
+                      x="25" y="110" width="110" height="75" rx="8" 
+                      style={{ filter: 'blur(3px) contrast(1.1)', imageRendering: 'pixelated' }} 
+                    />
+                    <text x="80" y="205" textAnchor="middle" className="text-[10px] font-mono font-bold fill-slate-500 dark:fill-slate-400">x (LR)</text>
+                    <text x="80" y="220" textAnchor="middle" className="text-[9px] font-mono fill-slate-400 dark:fill-slate-500">(Input)</text>
                   </g>
 
-                  {/* Node 2: Image Preprocessing */}
+                  {/* 2. Generator Network (G) Container Box */}
+                  <rect x="170" y="50" width="620" height="200" rx="20" fill="none" stroke="#3B82F6" strokeWidth="1.5" strokeDasharray="5 5" className="opacity-70" />
+                  <text x="480" y="75" textAnchor="middle" className="text-xs font-extrabold fill-blue-600 dark:fill-blue-400 tracking-wider uppercase">Generator Network (G)</text>
+
+                  {/* Generator Sub-blocks */}
+                  {/* Conv 3x3 (Blue) */}
                   <g 
-                    className="cursor-pointer" 
-                    onClick={() => setActiveArchNode('preprocess')}
-                    onMouseEnter={() => setHoveredArchNode('preprocess')}
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('conv')}
+                    onMouseEnter={() => setHoveredArchNode('conv')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="140" y="160" width="70" height="60" rx="10" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'preprocess' ? '#3B82F6' : 'currentColor'} strokeWidth={activeArchNode === 'preprocess' ? '3' : '1'} />
-                    <circle cx="175" cy="190" r="12" fill="#14B8A6" fillOpacity="0.1" />
-                    <foreignObject x="165" y="180" width="20" height="20">
-                      <Sliders className={`w-5 h-5 ${activeArchNode === 'preprocess' ? 'text-[#14B8A6]' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="175" y="240" textAnchor="middle" className="text-[9px] font-mono font-bold fill-slate-600 dark:fill-slate-400">Preprocessing</text>
+                    <rect x="185" y="100" width="40" height="135" rx="10" fill="#3B82F6" fillOpacity={activeArchNode === 'conv' ? '1' : '0.15'} stroke="#3B82F6" strokeWidth="2" />
+                    <text x="205" y="150" textAnchor="middle" fill={activeArchNode === 'conv' ? 'white' : 'currentColor'} className="text-[10px] font-bold writing-mode-vertical fill-slate-700 dark:fill-slate-300 transform rotate-90 origin-center" style={{ writingMode: 'vertical-rl' }}>Conv 3×3</text>
                   </g>
 
-                  {/* Node 3: Generator Network (RRDB) */}
+                  {/* RRDB Outer Border (Dashed Green) */}
                   <g 
-                    className="cursor-pointer" 
-                    onClick={() => setActiveArchNode('generator')}
-                    onMouseEnter={() => setHoveredArchNode('generator')}
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('rrdb')}
+                    onMouseEnter={() => setHoveredArchNode('rrdb')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="255" y="150" width="80" height="80" rx="14" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'generator' ? '#14B8A6' : 'currentColor'} strokeWidth={activeArchNode === 'generator' ? '3' : '1'} />
-                    <circle cx="295" cy="190" r="16" fill="#14B8A6" fillOpacity="0.1" />
-                    <foreignObject x="283" y="178" width="24" height="24">
-                      <Layers className={`w-6 h-6 ${activeArchNode === 'generator' ? 'text-teal-500' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="295" y="250" textAnchor="middle" className="text-[10px] font-sans font-bold fill-slate-700 dark:fill-slate-300">RRDB Gen</text>
+                    <rect x="240" y="95" width="285" height="145" rx="14" fill="#10B981" fillOpacity="0.04" stroke="#10B981" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <text x="382" y="114" textAnchor="middle" className="text-[9px] font-mono font-bold fill-emerald-600 dark:fill-emerald-400 uppercase tracking-wide">Residual-in-Residual Dense Blocks (RRDB)</text>
+
+                    {/* RRDB 1 Block */}
+                    <g>
+                      <rect x="255" y="130" width="60" height="60" rx="8" fill="#10B981" fillOpacity={activeArchNode === 'rrdb' ? '0.3' : '0.1'} stroke="#10B981" strokeWidth="1.5" />
+                      <text x="285" y="160" textAnchor="middle" className="text-[10px] font-bold fill-emerald-600 dark:fill-emerald-400">RRDB 1</text>
+                    </g>
+                    {/* Arrow between 1 and 2 */}
+                    <path d="M 315,160 L 330,160" stroke="#10B981" strokeWidth="1.5" markerEnd="url(#arrow-green-det)" />
+
+                    {/* RRDB 2 Block */}
+                    <g>
+                      <rect x="330" y="130" width="60" height="60" rx="8" fill="#10B981" fillOpacity={activeArchNode === 'rrdb' ? '0.3' : '0.1'} stroke="#10B981" strokeWidth="1.5" />
+                      <text x="360" y="160" textAnchor="middle" className="text-[10px] font-bold fill-emerald-600 dark:fill-emerald-400">RRDB 2</text>
+                    </g>
+                    {/* Arrow between 2 and ellipsis */}
+                    <path d="M 390,160 L 405,160" stroke="#10B981" strokeWidth="1.5" markerEnd="url(#arrow-green-det)" />
+
+                    {/* Ellipsis text */}
+                    <text x="422" y="162" textAnchor="middle" className="text-base font-bold fill-emerald-600 dark:fill-emerald-400">...</text>
+                    {/* Arrow between ellipsis and N */}
+                    <path d="M 440,160 L 455,160" stroke="#10B981" strokeWidth="1.5" markerEnd="url(#arrow-green-det)" />
+
+                    {/* RRDB N Block */}
+                    <g>
+                      <rect x="455" y="130" width="60" height="60" rx="8" fill="#10B981" fillOpacity={activeArchNode === 'rrdb' ? '0.3' : '0.1'} stroke="#10B981" strokeWidth="1.5" />
+                      <text x="485" y="160" textAnchor="middle" className="text-[10px] font-bold fill-emerald-600 dark:fill-emerald-400">RRDB N</text>
+                    </g>
+
+                    {/* G long skip connection line */}
+                    <path d="M 235,160 L 235,220 L 545,220 L 545,168" stroke="#000000" strokeWidth="1.5" fill="none" className="dark:stroke-white opacity-40" />
                   </g>
 
-                  {/* Node 4: Upsampling Layer */}
+                  {/* Element-wise addition circle node (+) */}
                   <g 
-                    className="cursor-pointer" 
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('skip')}
+                    onMouseEnter={() => setHoveredArchNode('skip')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
+                    <circle cx="545" cy="150" r="10" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'skip' ? '#14B8A6' : '#64748B'} strokeWidth="2" />
+                    <text x="545" y="154" textAnchor="middle" className="text-xs font-extrabold fill-slate-700 dark:fill-slate-300">+</text>
+                  </g>
+
+                  {/* Conv 3x3 (Blue) Post-RRDB */}
+                  <g 
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('conv')}
+                    onMouseEnter={() => setHoveredArchNode('conv')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
+                    <rect x="570" y="100" width="40" height="135" rx="10" fill="#3B82F6" fillOpacity={activeArchNode === 'conv' ? '1' : '0.15'} stroke="#3B82F6" strokeWidth="2" />
+                    <text x="590" y="150" textAnchor="middle" fill={activeArchNode === 'conv' ? 'white' : 'currentColor'} className="text-[10px] font-bold writing-mode-vertical fill-slate-700 dark:fill-slate-300" style={{ writingMode: 'vertical-rl' }}>Conv 3×3</text>
+                  </g>
+
+                  {/* Upsample 1 (Yellow) */}
+                  <g 
+                    className="cursor-pointer"
                     onClick={() => setActiveArchNode('upsample')}
                     onMouseEnter={() => setHoveredArchNode('upsample')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="380" y="160" width="75" height="60" rx="10" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'upsample' ? '#10B981' : 'currentColor'} strokeWidth={activeArchNode === 'upsample' ? '3' : '1'} />
-                    <circle cx="417" cy="190" r="14" fill="#10B981" fillOpacity="0.1" />
-                    <foreignObject x="407" y="180" width="20" height="20">
-                      <Maximize className={`w-5 h-5 ${activeArchNode === 'upsample' ? 'text-emerald-500' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="417" y="240" textAnchor="middle" className="text-[9px] font-mono font-bold fill-slate-600 dark:fill-slate-400">Pixel Shuffle</text>
+                    <rect x="625" y="100" width="40" height="135" rx="10" fill="#F59E0B" fillOpacity={activeArchNode === 'upsample' ? '1' : '0.15'} stroke="#F59E0B" strokeWidth="2" />
+                    <text x="645" y="150" textAnchor="middle" fill={activeArchNode === 'upsample' ? 'white' : 'currentColor'} className="text-[10px] font-bold writing-mode-vertical fill-slate-700 dark:fill-slate-300" style={{ writingMode: 'vertical-rl' }}>Upsample (×2)</text>
                   </g>
 
-                  {/* Node 5: Enhanced High Res Image */}
+                  {/* Upsample 2 (Yellow) */}
                   <g 
-                    className="cursor-pointer" 
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('upsample')}
+                    onMouseEnter={() => setHoveredArchNode('upsample')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
+                    <rect x="680" y="100" width="40" height="135" rx="10" fill="#F59E0B" fillOpacity={activeArchNode === 'upsample' ? '1' : '0.15'} stroke="#F59E0B" strokeWidth="2" />
+                    <text x="700" y="150" textAnchor="middle" fill={activeArchNode === 'upsample' ? 'white' : 'currentColor'} className="text-[10px] font-bold writing-mode-vertical fill-slate-700 dark:fill-slate-300" style={{ writingMode: 'vertical-rl' }}>Upsample (×2)</text>
+                  </g>
+
+                  {/* Conv 3x3 (Blue) Output */}
+                  <g 
+                    className="cursor-pointer"
+                    onClick={() => setActiveArchNode('conv')}
+                    onMouseEnter={() => setHoveredArchNode('conv')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
+                    <rect x="735" y="100" width="40" height="135" rx="10" fill="#3B82F6" fillOpacity={activeArchNode === 'conv' ? '1' : '0.15'} stroke="#3B82F6" strokeWidth="2" />
+                    <text x="755" y="150" textAnchor="middle" fill={activeArchNode === 'conv' ? 'white' : 'currentColor'} className="text-[10px] font-bold writing-mode-vertical fill-slate-700 dark:fill-slate-300" style={{ writingMode: 'vertical-rl' }}>Conv 3×3</text>
+                  </g>
+
+                  {/* 3. High Resolution Output Card */}
+                  <g 
+                    className="cursor-pointer"
                     onClick={() => setActiveArchNode('highres')}
                     onMouseEnter={() => setHoveredArchNode('highres')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="500" y="155" width="70" height="70" rx="12" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'highres' ? '#10B981' : 'currentColor'} strokeWidth={activeArchNode === 'highres' ? '3' : '1'} />
-                    <circle cx="535" cy="190" r="15" fill="#10B981" fillOpacity="0.1" />
-                    <foreignObject x="523" y="178" width="24" height="24">
-                      <Sparkles className={`w-6 h-6 ${activeArchNode === 'highres' ? 'text-emerald-400' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="535" y="245" textAnchor="middle" className="text-[10px] font-sans font-bold fill-slate-700 dark:fill-slate-300">Enhanced 4K</text>
+                    <rect x="825" y="55" width="145" height="190" rx="16" fill="white" className="dark:fill-[#0B0F19]" stroke={activeArchNode === 'highres' ? '#10B981' : '#E2E8F0'} strokeWidth={activeArchNode === 'highres' ? '3' : '1.5'} style={{ stroke: activeArchNode === 'highres' ? '#10B981' : 'rgba(148,163,184,0.15)' }} />
+                    <text x="897" y="80" textAnchor="middle" className="text-[10px] font-bold fill-emerald-600 dark:fill-emerald-400 font-sans">High Resolution</text>
+                    <text x="897" y="94" textAnchor="middle" className="text-[10px] font-bold fill-emerald-600 dark:fill-emerald-400 font-sans">Output Image</text>
+                    <image 
+                      href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400" 
+                      x="835" y="110" width="125" height="75" rx="8" 
+                    />
+                    <text x="897" y="205" textAnchor="middle" className="text-[10px] font-mono font-bold fill-slate-500 dark:fill-slate-400">y (SR)</text>
+                    <text x="897" y="220" textAnchor="middle" className="text-[9px] font-mono fill-slate-400 dark:fill-slate-500">(Output)</text>
                   </g>
 
-                  {/* Node 6: Discriminator */}
+
+                  {/* 4. Discriminator Network (D) Container */}
                   <g 
-                    className="cursor-pointer" 
+                    className="cursor-pointer"
                     onClick={() => setActiveArchNode('discriminator')}
                     onMouseEnter={() => setHoveredArchNode('discriminator')}
                     onMouseLeave={() => setHoveredArchNode(null)}
                   >
-                    <rect x="370" y="265" width="80" height="50" rx="8" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'discriminator' ? '#EF4444' : 'currentColor'} strokeWidth={activeArchNode === 'discriminator' ? '3' : '1'} />
-                    <circle cx="410" cy="290" r="10" fill="#EF4444" fillOpacity="0.1" />
-                    <foreignObject x="402" y="282" width="16" height="16">
-                      <ShieldCheck className={`w-4 h-4 ${activeArchNode === 'discriminator' ? 'text-rose-500' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="410" y="330" textAnchor="middle" className="text-[9px] font-sans font-bold fill-slate-600 dark:fill-slate-400">Discriminator</text>
+                    <rect x="170" y="290" width="620" height="195" rx="20" fill="#8B5CF6" fillOpacity="0.02" stroke="#8B5CF6" strokeWidth={activeArchNode === 'discriminator' ? '2.5' : '1.5'} strokeDasharray={activeArchNode === 'discriminator' ? 'none' : '5 5'} style={{ stroke: '#8B5CF6' }} />
+                    <text x="480" y="315" textAnchor="middle" className="text-xs font-extrabold fill-purple-600 dark:fill-purple-400 tracking-wider uppercase">Discriminator Network (D)</text>
+
+                    {/* Left: Input Selection */}
+                    <g>
+                      {/* Real HR Image Card */}
+                      <rect x="185" y="335" width="75" height="42" rx="8" fill="white" className="dark:fill-[#0B0F19]" stroke="#CBD5E1" strokeWidth="1" style={{ stroke: 'rgba(148,163,184,0.15)' }} />
+                      <text x="222" y="348" textAnchor="middle" className="text-[7.5px] font-sans font-semibold fill-slate-600 dark:fill-slate-400">Real HR Image</text>
+                      <text x="222" y="357" textAnchor="middle" className="text-[6.5px] font-mono fill-slate-400 dark:fill-slate-500">(From Dataset)</text>
+                      <image href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=50" x="195" y="361" width="55" height="12" rx="2" />
+
+                      {/* Generated HR Image Card */}
+                      <rect x="185" y="415" width="75" height="42" rx="8" fill="white" className="dark:fill-[#0B0F19]" stroke="#CBD5E1" strokeWidth="1" style={{ stroke: 'rgba(148,163,184,0.15)' }} />
+                      <text x="222" y="428" textAnchor="middle" className="text-[7.5px] font-sans font-semibold fill-slate-600 dark:fill-slate-400">Generated HR</text>
+                      <text x="222" y="437" textAnchor="middle" className="text-[6.5px] font-mono fill-slate-400 dark:fill-slate-500">(From Generator)</text>
+                      <image href="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=50" x="195" y="441" width="55" height="12" rx="2" style={{ filter: 'blur(1px)' }} />
+
+                      {/* Converging Bracket paths */}
+                      <path d="M 260,356 L 285,356 L 285,396" stroke="#8B5CF6" strokeWidth="1.5" fill="none" />
+                      <path d="M 260,436 L 285,436 L 285,396" stroke="#8B5CF6" strokeWidth="1.5" fill="none" />
+                      {/* Arrow into Conv Block 1 */}
+                      <path d="M 285,396 L 315,396" stroke="#8B5CF6" strokeWidth="1.5" markerEnd="url(#arrow-purple-det)" />
+                    </g>
+
+                    {/* Center: Conv Blocks */}
+                    {/* Conv Block 1 */}
+                    <g>
+                      <rect x="320" y="345" width="32" height="100" rx="6" fill="#8B5CF6" fillOpacity="0.1" stroke="#8B5CF6" strokeWidth="1" />
+                      <text x="336" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-purple-700 dark:fill-purple-300" style={{ writingMode: 'vertical-rl' }}>Conv 1</text>
+                    </g>
+                    {/* Arrow 1-2 */}
+                    <path d="M 352,396 L 368,396" stroke="#8B5CF6" strokeWidth="1" />
+
+                    {/* Conv Block 2 */}
+                    <g>
+                      <rect x="370" y="345" width="32" height="100" rx="6" fill="#8B5CF6" fillOpacity="0.1" stroke="#8B5CF6" strokeWidth="1" />
+                      <text x="386" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-purple-700 dark:fill-purple-300" style={{ writingMode: 'vertical-rl' }}>Conv 2</text>
+                    </g>
+                    {/* Arrow 2-3 */}
+                    <path d="M 402,396 L 418,396" stroke="#8B5CF6" strokeWidth="1" />
+
+                    {/* Conv Block 3 */}
+                    <g>
+                      <rect x="420" y="345" width="32" height="100" rx="6" fill="#8B5CF6" fillOpacity="0.1" stroke="#8B5CF6" strokeWidth="1" />
+                      <text x="436" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-purple-700 dark:fill-purple-300" style={{ writingMode: 'vertical-rl' }}>Conv 3</text>
+                    </g>
+                    {/* Arrow 3-4 */}
+                    <path d="M 452,396 L 468,396" stroke="#8B5CF6" strokeWidth="1" />
+
+                    {/* Conv Block 4 */}
+                    <g>
+                      <rect x="470" y="345" width="32" height="100" rx="6" fill="#8B5CF6" fillOpacity="0.1" stroke="#8B5CF6" strokeWidth="1" />
+                      <text x="486" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-purple-700 dark:fill-purple-300" style={{ writingMode: 'vertical-rl' }}>Conv 4</text>
+                    </g>
+                    {/* Arrow 4-5 */}
+                    <path d="M 502,396 L 518,396" stroke="#8B5CF6" strokeWidth="1" />
+
+                    {/* Conv Block 5 */}
+                    <g>
+                      <rect x="520" y="345" width="32" height="100" rx="6" fill="#8B5CF6" fillOpacity="0.1" stroke="#8B5CF6" strokeWidth="1" />
+                      <text x="536" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-purple-700 dark:fill-purple-300" style={{ writingMode: 'vertical-rl' }}>Conv 5</text>
+                    </g>
+                    {/* Arrow 5-Dense */}
+                    <path d="M 552,396 L 568,396" stroke="#8B5CF6" strokeWidth="1" />
+
+                    {/* Dense Layer */}
+                    <g>
+                      <rect x="570" y="345" width="32" height="100" rx="6" fill="#6366F1" fillOpacity="0.2" stroke="#6366F1" strokeWidth="1" />
+                      <text x="586" y="398" textAnchor="middle" className="text-[8px] font-bold writing-mode-vertical fill-indigo-700 dark:fill-indigo-300" style={{ writingMode: 'vertical-rl' }}>Dense</text>
+                    </g>
+                    {/* Arrow Dense-Output */}
+                    <path d="M 602,396 L 640,396" stroke="#8B5CF6" strokeWidth="1.5" markerEnd="url(#arrow-purple-det)" />
+
+                    {/* Right: Output Probability */}
+                    <g>
+                      {/* Interactive bars */}
+                      <rect x="645" y="380" width="6" height="32" rx="2" fill="#8B5CF6" />
+                      <rect x="655" y="365" width="6" height="47" rx="2" fill="#10B981" />
+                      <rect x="665" y="390" width="6" height="22" rx="2" fill="#3B82F6" />
+
+                      <text x="690" y="390" className="text-[10px] font-bold fill-slate-800 dark:fill-slate-200 font-sans">Real or Fake?</text>
+                      <text x="690" y="402" className="text-[8.5px] font-mono fill-slate-500 dark:fill-slate-400">(Probability)</text>
+                    </g>
                   </g>
 
-                  {/* Node 7: Perceptual Loss */}
-                  <g 
-                    className="cursor-pointer" 
-                    onClick={() => setActiveArchNode('loss')}
-                    onMouseEnter={() => setHoveredArchNode('loss')}
-                    onMouseLeave={() => setHoveredArchNode(null)}
-                  >
-                    <rect x="210" y="265" width="60" height="50" rx="8" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'loss' ? '#F59E0B' : 'currentColor'} strokeWidth={activeArchNode === 'loss' ? '3' : '1'} />
-                    <circle cx="240" cy="290" r="10" fill="#F59E0B" fillOpacity="0.1" />
-                    <foreignObject x="232" y="282" width="16" height="16">
-                      <Activity className={`w-4 h-4 ${activeArchNode === 'loss' ? 'text-amber-500' : 'text-slate-400'}`} />
-                    </foreignObject>
-                    <text x="240" y="330" textAnchor="middle" className="text-[9px] font-sans font-bold fill-slate-600 dark:fill-slate-400">VGG Loss</text>
-                  </g>
+                  {/* 5. Legend Box */}
+                  <g>
+                    <rect x="825" y="290" width="145" height="195" rx="20" fill="white" className="dark:fill-[#0B0F19]" stroke="#CBD5E1" strokeWidth="1" style={{ stroke: 'rgba(148,163,184,0.15)' }} />
+                    <text x="840" y="318" className="text-xs font-bold fill-slate-800 dark:fill-slate-200">Legend</text>
 
-                  {/* Defs consolidated at the top */}
+                    {/* Row 1: Convolution */}
+                    <rect x="840" y="336" width="12" height="12" rx="3" fill="#3B82F6" />
+                    <text x="860" y="346" className="text-[9.5px] font-medium fill-slate-600 dark:fill-slate-400">Convolution Layer</text>
+
+                    {/* Row 2: RRDB Block */}
+                    <rect x="840" y="364" width="12" height="12" rx="3" fill="#10B981" />
+                    <text x="860" y="374" className="text-[9.5px] font-medium fill-slate-600 dark:fill-slate-400">RRDB Block</text>
+
+                    {/* Row 3: Upsampling Layer */}
+                    <rect x="840" y="392" width="12" height="12" rx="3" fill="#F59E0B" />
+                    <text x="860" y="402" className="text-[9.5px] font-medium fill-slate-600 dark:fill-slate-400">Upsampling Layer</text>
+
+                    {/* Row 4: Discriminator Block */}
+                    <rect x="840" y="420" width="12" height="12" rx="3" fill="#8B5CF6" />
+                    <text x="860" y="430" className="text-[9.5px] font-medium fill-slate-600 dark:fill-slate-400">Discriminator Block</text>
+
+                    {/* Row 5: Element-wise addition */}
+                    <circle cx="846" cy="454" r="6" fill="white" stroke="#64748B" strokeWidth="1.5" className="dark:fill-slate-900" />
+                    <text x="846" y="457.5" textAnchor="middle" className="text-[8px] font-bold fill-slate-700 dark:fill-slate-300">+</text>
+                    <text x="860" y="458" className="text-[9.5px] font-medium fill-slate-600 dark:fill-slate-400">Element-wise Addition</text>
+                  </g>
                 </svg>
 
-                {/* Hover-based floating tooltip component */}
+                {/* Floating Detailed Tooltips (Responsive Overlay) */}
                 <AnimatePresence>
                   {hoveredArchNode && ARCH_NODE_TOOLTIPS[hoveredArchNode] && (() => {
                     const node = ARCH_NODE_TOOLTIPS[hoveredArchNode];
-                    const leftPercent = (node.centerX / 600) * 100;
-                    const topPercent = (node.centerY / 380) * 100;
+                    const leftPercent = (node.centerX / 1000) * 100;
+                    const topPercent = (node.centerY / 520) * 100;
                     
                     return (
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 5 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 5 }}
-                        transition={{ duration: 0.15, ease: 'easeOut' }}
-                        className="absolute z-40 bg-slate-900/95 dark:bg-slate-950/95 text-white border border-white/10 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md pointer-events-none w-56 text-left"
+                        transition={{ duration: 0.12, ease: 'easeOut' }}
+                        className="absolute z-40 bg-slate-900/95 dark:bg-slate-950/95 text-white border border-white/10 rounded-2xl p-4 shadow-2xl backdrop-blur-md pointer-events-none w-64 text-left"
                         style={{
                           left: `${leftPercent}%`,
                           top: `${topPercent}%`,
@@ -758,11 +909,11 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                           <h4 className="text-xs font-bold font-sans tracking-tight text-white leading-tight">
                             {node.title}
                           </h4>
-                          <p className="text-[10px] text-slate-300 font-sans leading-normal">
+                          <p className="text-[10px] text-slate-300 font-sans leading-relaxed">
                             {node.desc}
                           </p>
                           <div className="pt-1.5 border-t border-white/5 flex items-center gap-1">
-                            <span className="text-[8px] font-mono text-slate-400 font-medium bg-white/5 px-1.5 py-0.5 rounded">
+                            <span className="text-[8px] font-mono text-slate-400 font-semibold bg-white/5 px-1.5 py-0.5 rounded">
                               {node.metric}
                             </span>
                           </div>
@@ -773,126 +924,129 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                 </AnimatePresence>
               </div>
 
-              {/* Quick tip text */}
-              <div className="flex items-center gap-2 mt-4 px-3 py-2 bg-blue-500/10 border border-blue-500/10 rounded-xl text-[10px] text-blue-700 dark:text-blue-300">
+              {/* Interaction Tip Banner */}
+              <div className="flex items-center gap-2 mt-4 px-3 py-2 bg-blue-500/10 border border-blue-500/10 rounded-xl text-[10px] text-blue-700 dark:text-blue-300 w-fit">
                 <Info className="w-3.5 h-3.5 shrink-0 text-blue-500" />
-                <span>Interactivity Active: Hover or click on different sections of the graph to populate deep-dive documentation on the right.</span>
+                <span>Hover or click model components above to analyze real-time tensor shape mutations, mathematical kernels, and network specs.</span>
               </div>
-
             </div>
 
-            {/* Right Side: Block Descriptions (5 Cols) */}
-            <div className="lg:col-span-5 bg-white dark:bg-[#090d16]/75 border border-slate-200 dark:border-white/10 rounded-3xl p-6 md:p-8 flex flex-col gap-6 text-left shadow-sm min-h-[460px] relative overflow-hidden">
-              <div className="absolute top-[-30px] right-[-30px] w-24 h-24 bg-teal-500/10 rounded-full blur-xl pointer-events-none" />
+            {/* Architecture Components Bento Grid */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold font-sans tracking-tight text-slate-900 dark:text-white pl-1">
+                Architecture Components
+              </h3>
               
-              <AnimatePresence mode="wait">
-                {activeArchNode === 'lowres' && (
-                  <motion.div key="lowres" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-blue-500">Pipeline Ingest</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Low-Resolution Image (LR)</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      The starting input source. Tensors of spatial size <strong>H × W × 3</strong> are passed to CUDA memory. Often suffers from JPEG artifacts, blockiness, color bleeding, and lack of fine details.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Input Format: PNG, JPG, WEBP</div>
-                      <div className="mt-1">Inference Resolution: Up to 1080p source</div>
-                      <div className="mt-1">Batch Sizing: Dynamic channel batch mapping</div>
-                    </div>
-                  </motion.div>
-                )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                {[
+                  {
+                    id: 'conv',
+                    title: 'Convolution Layer',
+                    badge: 'Feature Extractor',
+                    desc: 'Extracts low-level structural features using 3×3 convolution kernels, mapping RGB channels into 64-dimensional feature arrays.',
+                    metric: 'Kernel: 3×3, Channels: 64',
+                    bg: 'bg-blue-500/5 hover:bg-blue-500/10 border-blue-500/10 dark:border-blue-500/5 dark:hover:border-blue-500/20',
+                    text: 'text-blue-600 dark:text-blue-400',
+                    glow: 'shadow-[0_0_20px_rgba(59,130,246,0.15)]',
+                    icon: Sliders
+                  },
+                  {
+                    id: 'rrdb',
+                    title: 'RRDB Block',
+                    badge: 'Feature Synthesizer',
+                    desc: 'Residual-in-Residual dense layers with dense connections. Omits memory-heavy Batch Normalization for cleaner gradients.',
+                    metric: 'Depth: 23 Blocks, Params: ~16.7M',
+                    bg: 'bg-emerald-500/5 hover:bg-emerald-500/10 border-emerald-500/10 dark:border-emerald-500/5 dark:hover:border-emerald-500/20',
+                    text: 'text-emerald-600 dark:text-emerald-400',
+                    glow: 'shadow-[0_0_20px_rgba(16,185,129,0.15)]',
+                    icon: Layers
+                  },
+                  {
+                    id: 'upsample',
+                    title: 'Upsampling Layer',
+                    badge: 'Pixel Shuffle',
+                    desc: 'Doubles spatial coordinates by reshaping depth dimensions spatially, completely eliminating pixel deconvolution halos.',
+                    metric: 'Method: Sub-Pixel Shuffler',
+                    bg: 'bg-amber-500/5 hover:bg-amber-500/10 border-amber-500/10 dark:border-amber-500/5 dark:hover:border-amber-500/20',
+                    text: 'text-amber-600 dark:text-amber-400',
+                    glow: 'shadow-[0_0_20px_rgba(245,158,11,0.15)]',
+                    icon: Maximize2
+                  },
+                  {
+                    id: 'discriminator',
+                    title: 'Discriminator',
+                    badge: 'Adversarial Critic',
+                    desc: 'A Relativistic GAN scoring real vs generated details. Triggers rich micro-texture synthesis during backpropagation.',
+                    metric: 'Architecture: RaGAN-v2 CNN',
+                    bg: 'bg-purple-500/5 hover:bg-purple-500/10 border-purple-500/10 dark:border-purple-500/5 dark:hover:border-purple-500/20',
+                    text: 'text-purple-600 dark:text-purple-400',
+                    glow: 'shadow-[0_0_20px_rgba(139,92,246,0.15)]',
+                    icon: ShieldCheck
+                  },
+                  {
+                    id: 'skip',
+                    title: 'Skip Connections',
+                    badge: 'Gradient Highway',
+                    desc: 'Channels low-frequency features directly across the RRDB stack, stabilizing weights and retaining macro colors.',
+                    metric: 'Operation: Element-wise (+)',
+                    bg: 'bg-teal-500/5 hover:bg-teal-500/10 border-teal-500/10 dark:border-teal-500/5 dark:hover:border-teal-500/20',
+                    text: 'text-teal-600 dark:text-teal-400',
+                    glow: 'shadow-[0_0_20px_rgba(20,184,166,0.15)]',
+                    icon: Split
+                  }
+                ].map((component) => {
+                  const IconComp = component.icon;
+                  const isSelected = activeArchNode === component.id;
+                  
+                  return (
+                    <motion.div
+                      key={component.id}
+                      onClick={() => setActiveArchNode(component.id)}
+                      className={`cursor-pointer border rounded-2xl p-5 text-left transition-all duration-300 relative overflow-hidden flex flex-col justify-between ${component.bg} ${isSelected ? `${component.glow} border-current ${component.text} ring-1 ring-current bg-white dark:bg-[#090d16]/90 scale-[1.02]` : 'border-slate-200 dark:border-white/5 bg-white dark:bg-[#090d16]/30'}`}
+                      whileHover={{ scale: isSelected ? 1.02 : 1.01 }}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between gap-1.5">
+                          <span className="text-[8px] font-mono tracking-wider font-bold uppercase opacity-80">
+                            {component.badge}
+                          </span>
+                          <span className={`w-1.5 h-1.5 rounded-full ${isSelected ? 'bg-current animate-ping' : 'bg-slate-300 dark:bg-slate-700'}`} />
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <IconComp className="w-4 h-4 shrink-0" />
+                          <h4 className="text-xs font-bold font-sans tracking-tight">
+                            {component.title}
+                          </h4>
+                        </div>
+                        
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400 leading-normal leading-relaxed">
+                          {component.desc}
+                        </p>
+                      </div>
 
-                {activeArchNode === 'preprocess' && (
-                  <motion.div key="preprocess" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#14B8A6]">Mathematical Norm</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Image Preprocessing</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      Raw pixels are cast into floating-point numbers. Standard normalization divides rgb values by 255.0 to yield a stable range of <strong>[0.0, 1.0]</strong>. Mirror-reflect padding prevents edge boundary artifacts in subsequent convolution.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Range Conversion: [0, 255] → [0.0, 1.0]</div>
-                      <div className="mt-1">Boundary Pad: Mirror reflective (10px)</div>
-                      <div className="mt-1">Data Precision: float32 / float16 standard</div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeArchNode === 'generator' && (
-                  <motion.div key="generator" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-teal-400 font-bold">The Core Model</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Generator Network (RRDB)</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      Composed of 23 Residual-in-Residual Dense Blocks. RRDB omits Batch Normalization (BN) layers, which saves 30% GPU memory and improves training stability. Dense multi-layer skip connections pass shallow visual features forward to preserve shape and edge contours.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Residual Blocks: 23 Dense Blocks</div>
-                      <div className="mt-1">Weight Parameter: 16.7 Million</div>
-                      <div className="mt-1">Inference Speed: FP16 cuda half-precision</div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeArchNode === 'upsample' && (
-                  <motion.div key="upsample" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400">Scale Expansion</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Pixel Shuffle Upsampler</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      Instead of standard bicubic upsampling or transposed deconvolution (which produce pixel grid checkerboard artifacts), ESRGAN uses Sub-Pixel Convolution (Pixel Shuffle). Channels are multiplied by the square of the scale factor, then reorganized spatially to double or quadruple dimensions cleanly.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Grid Shuffler: Channel spatial translation</div>
-                      <div className="mt-1">Upscale Factor: 2x, 4x compatible</div>
-                      <div className="mt-1">Artifact Suppression: High-fidelity anti-ringing</div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeArchNode === 'highres' && (
-                  <motion.div key="highres" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-400 font-bold">The Output Stream</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Enhanced High Resolution</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      The final output. Spatial size is exactly scaled (e.g. 4x). Pixel values are clamped to safe ranges and de-normalized back to integers <strong>[0, 255]</strong>. Edges are razor sharp, noise is completely eliminated, and textures look organic.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Peak Resolution: Scaled to 4K limits</div>
-                      <div className="mt-1">Color Bitdepth: 8-bit or 16-bit Lossless PNG</div>
-                      <div className="mt-1">Edge Contrast: Optimized local gradient delta</div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeArchNode === 'discriminator' && (
-                  <motion.div key="discriminator" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-rose-500">Adversarial Judge</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Relativistic Discriminator</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      Used during model training. It predicts the probability that real training photos are more realistic than fake generated upscaled images. This relativistic formulation pushes the Generator to draw highly organic micro-textures instead of just copying blurred borders.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>GAN Metric: Relativistic Average Loss (RaGAN)</div>
-                      <div className="mt-1">Feature Space: VGG19 activation patterns</div>
-                      <div className="mt-1">Target: Natural-looking texture synthesis</div>
-                    </div>
-                  </motion.div>
-                )}
-
-                {activeArchNode === 'loss' && (
-                  <motion.div key="loss" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-4">
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-amber-500 font-bold">Optimization Goal</span>
-                    <h3 className="text-xl font-sans font-extrabold text-slate-900 dark:text-white">Perceptual Loss (VGG-19)</h3>
-                    <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
-                      Rather than checking if pixels match perfectly (L1 pixel-to-pixel loss, which always produces blurred images), Perceptual Loss feeds both the generated image and target photo through a pre-trained VGG-19 network and compares intermediate activation grids (conv4_4). This forces the structural content and high-level patterns to align exactly.
-                    </p>
-                    <div className="p-3 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-xl text-[10px] font-mono text-slate-500">
-                      <div>Feature Extractor: Pre-trained VGG-19 CNN</div>
-                      <div className="mt-1">Primary Target layer: conv4_4 layer weights</div>
-                      <div className="mt-1">Loss formulation: MSE of VGG activation vectors</div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-white/5 flex items-center justify-between text-[8px] font-mono opacity-80">
+                        <span>{component.metric}</span>
+                        <ChevronRight className="w-3 h-3" />
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
 
+            {/* Bottom Comprehensive Info Banner */}
+            <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 dark:border-emerald-500/5 rounded-2xl flex items-center gap-3 text-left">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center shrink-0 text-emerald-600 dark:text-emerald-400">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300">Unified Training Criteria</p>
+                <p className="text-[10.5px] text-slate-600 dark:text-slate-400">
+                  ESRGAN integrates <strong>perceptual loss</strong>, <strong>adversarial loss</strong>, and <strong>pixel-level L1 loss</strong> simultaneously to optimize weights, ensuring synthetic textures align visually with human visual cortex responses rather than mathematical means.
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 

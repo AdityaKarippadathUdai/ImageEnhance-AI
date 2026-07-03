@@ -3,6 +3,8 @@ import { Upload, Sliders, Sparkles, Image as ImageIcon, Download, AlertCircle, C
 import { motion, AnimatePresence } from 'motion/react';
 import { ProcessingStep } from '../types';
 import { useToast } from '../context/ToastContext';
+import ImageMetadataPanel from './ImageMetadataPanel';
+import EnhancedImageSummary from './EnhancedImageSummary';
 
 export default function UpscalePlayground() {
   const toast = useToast();
@@ -11,6 +13,16 @@ export default function UpscalePlayground() {
   const [customWidth, setCustomWidth] = useState<number>(0);
   const [customHeight, setCustomHeight] = useState<number>(0);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  
+  // Metadata extraction states
+  const [fileSize, setFileSize] = useState<number | null>(null);
+  const [fileFormat, setFileFormat] = useState<string | null>(null);
+  const [colorMode, setColorMode] = useState<string | null>(null);
+  
+  // Pipeline metrics
+  const [actualProcessingTime, setActualProcessingTime] = useState<number>(3.3);
+  const [pipelineStatus, setPipelineStatus] = useState<'success' | 'failed'>('success');
+  const [pipelineError, setPipelineError] = useState<string | null>(null);
   
   // Upscaling parameter states - restricted to Real-ESRGAN compatible 2x and 4x
   const [scaleFactor, setScaleFactor] = useState<number>(4);
@@ -108,6 +120,12 @@ export default function UpscalePlayground() {
     }
     
     setCustomFileName(file.name);
+    setFileSize(file.size);
+    
+    // Extract format: e.g. "image/png" -> "PNG", "image/jpeg" -> "JPEG", "image/webp" -> "WebP"
+    const format = file.type ? file.type.split('/')[1]?.toUpperCase() : file.name.split('.').pop()?.toUpperCase() || 'PNG';
+    setFileFormat(format === 'JPEG' ? 'JPG' : format);
+
     const reader = new FileReader();
     reader.onload = (event) => {
       if (event.target?.result) {
@@ -120,6 +138,39 @@ export default function UpscalePlayground() {
         img.onload = () => {
           setCustomWidth(img.width);
           setCustomHeight(img.height);
+          
+          // Analyze color mode with a temporary canvas
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.min(img.width, 100);
+            canvas.height = Math.min(img.height, 100);
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+              const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+              let hasAlpha = false;
+              let isGray = true;
+              for (let i = 0; i < imgData.length; i += 4) {
+                const r = imgData[i];
+                const g = imgData[i+1];
+                const b = imgData[i+2];
+                const a = imgData[i+3];
+                if (a < 255) {
+                  hasAlpha = true;
+                }
+                if (Math.abs(r - g) > 5 || Math.abs(r - b) > 5 || Math.abs(g - b) > 5) {
+                  isGray = false;
+                }
+              }
+              setColorMode(hasAlpha ? 'RGBA' : isGray ? 'Grayscale' : 'RGB');
+            } else {
+              setColorMode('RGB');
+            }
+          } catch (e) {
+            // cross-origin security fallback
+            setColorMode('RGB');
+          }
+
           toast.success(`"${file.name}" loaded successfully. Ready to upscale!`, { title: 'Image Uploaded' });
         };
         img.src = resultSrc;
@@ -135,6 +186,9 @@ export default function UpscalePlayground() {
     setCustomFileName('misty_alpine_ridge_demo.jpg');
     setCustomWidth(800);
     setCustomHeight(600);
+    setFileSize(145408); // Approx 142 KB
+    setFileFormat('JPG');
+    setColorMode('RGB');
     setCustomImage('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800');
     setHasProcessed(false);
     toast.success('Misty Alpine Ridge demo loaded successfully!', { title: 'Demo Image Loaded' });
@@ -149,15 +203,33 @@ export default function UpscalePlayground() {
     setProgress(0);
     setProcessingLogs([]);
     setCurrentStepIndex(0);
+    setPipelineStatus('success');
+    setPipelineError(null);
     
+    const startTimeStamp = Date.now();
     let currentStep = 0;
     const totalSteps = steps.length;
 
     const runStep = () => {
       if (currentStep >= totalSteps) {
+        const endTimeStamp = Date.now();
+        const durationSec = (endTimeStamp - startTimeStamp) / 1000;
+        setActualProcessingTime(durationSec);
+
+        // Simulate a failure for specific test cases (e.g. filename has 'fail' or 'corrupt')
+        if (customFileName.toLowerCase().includes('fail') || customFileName.toLowerCase().includes('corrupt')) {
+          setPipelineStatus('failed');
+          setPipelineError('CUDA memory allocation failure: The convolutional neural network failed to partition the source texture into sufficiently small GPU tiled streams.');
+          setIsProcessing(false);
+          setHasProcessed(true);
+          setProcessingLogs(prev => [...prev, `❌ [FATAL] Real-ESRGAN x4+ pipeline terminated unexpectedly. GPU Core out of memory.`]);
+          toast.error(`Super-resolution failed! Out of VRAM memory for targeted factor.`, { title: 'Upscale Failed' });
+          return;
+        }
+
         setIsProcessing(false);
         setHasProcessed(true);
-        setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Real-ESRGAN super-resolution complete! Enhanced output generated in 3.1s`]);
+        setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Real-ESRGAN super-resolution complete! Enhanced output generated in ${durationSec.toFixed(1)}s`]);
         setProgress(100);
         toast.success(`Super-resolution complete! Restored fine-grained textures at ${scaleFactor}x scale.`, { title: 'Upscale Complete' });
         return;
@@ -247,7 +319,7 @@ export default function UpscalePlayground() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4, ease: "easeOut" }}
-              className="flex justify-center items-center py-4"
+              className="flex flex-col items-center gap-8 py-4 w-full"
             >
               <div
                 id="premium-dropzone"
@@ -349,6 +421,19 @@ export default function UpscalePlayground() {
                   </div>
                 </div>
               </div>
+
+              {/* Centered compact metadata placeholder panel */}
+              <div className="w-full max-w-2xl">
+                <ImageMetadataPanel
+                  fileName={null}
+                  width={null}
+                  height={null}
+                  fileSize={null}
+                  fileFormat={null}
+                  colorMode={null}
+                  scaleFactor={scaleFactor}
+                />
+              </div>
             </motion.div>
           ) : (
             /* STATE 2: Active Comparison Workspace with Compact Premium Preview Card */
@@ -380,6 +465,9 @@ export default function UpscalePlayground() {
                           setCustomFileName('');
                           setCustomWidth(0);
                           setCustomHeight(0);
+                          setFileSize(null);
+                          setFileFormat(null);
+                          setColorMode(null);
                           setHasProcessed(false);
                           setUploadError(null);
                         }}
@@ -403,6 +491,17 @@ export default function UpscalePlayground() {
                     </div>
                   </div>
                 </div>
+
+                {/* Real-time Image Metadata Panel */}
+                <ImageMetadataPanel
+                  fileName={customFileName}
+                  width={customWidth}
+                  height={customHeight}
+                  fileSize={fileSize}
+                  fileFormat={fileFormat}
+                  colorMode={colorMode}
+                  scaleFactor={scaleFactor}
+                />
 
                 {/* Parametrization Drawer */}
                 <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm dark:shadow-xl relative overflow-hidden">
@@ -539,7 +638,7 @@ export default function UpscalePlayground() {
               </div>
 
               {/* RIGHT COLUMN: Viewports comparison & Download action */}
-              <div className="lg:col-span-7 flex flex-col gap-6">
+              <div id="playground-viewports" className="lg:col-span-7 flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   
                   {/* Left Viewport: Original Low-Res */}
@@ -626,39 +725,49 @@ export default function UpscalePlayground() {
 
                 </div>
 
-                {/* Quick Stats and Download Suite */}
-                <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
-                  <div className="text-left">
-                    <h4 className="text-xs font-bold text-slate-800 dark:text-[#CBD5E1]">
-                      Custom Super-Resolution Output
+                {/* Enhanced Image Summary & Action Suite */}
+                {hasProcessed ? (
+                  <EnhancedImageSummary
+                    imageSrc={customImage}
+                    fileName={customFileName}
+                    originalWidth={customWidth}
+                    originalHeight={customHeight}
+                    fileSize={fileSize}
+                    fileFormat={fileFormat}
+                    scaleFactor={scaleFactor}
+                    processingTime={actualProcessingTime}
+                    status={pipelineStatus}
+                    errorMessage={pipelineError}
+                    onDownload={handleDownload}
+                    onCompare={() => {
+                      document.getElementById('playground-viewports')?.scrollIntoView({ behavior: 'smooth' });
+                      toast.info('Viewing comparative before/after viewports.', { title: 'Viewport Comparison' });
+                    }}
+                    onReset={() => {
+                      setCustomImage(null);
+                      setCustomFileName('');
+                      setCustomWidth(0);
+                      setCustomHeight(0);
+                      setFileSize(null);
+                      setFileFormat(null);
+                      setColorMode(null);
+                      setHasProcessed(false);
+                      setUploadError(null);
+                      toast.info('Workspace reset. Ready for new asset upload.', { title: 'Workspace Cleaned' });
+                    }}
+                    onRetry={handleEnhance}
+                  />
+                ) : (
+                  <div className="bg-white/40 dark:bg-[#111827]/20 backdrop-blur-md border border-slate-200 dark:border-white/5 rounded-2xl p-6 text-center shadow-sm">
+                    <Sparkles className="w-6 h-6 text-slate-400 dark:text-slate-600 mx-auto mb-2 animate-pulse" />
+                    <h4 className="text-xs font-bold text-slate-700 dark:text-slate-400">
+                      Super-Resolution Summary Card
                     </h4>
-                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 max-w-md font-sans leading-relaxed">
-                      Upscaled using Real-ESRGAN x4+ model at {scaleFactor}x factor. Intact geometry with reconstructed edge sharpness.
+                    <p className="text-[11px] text-slate-500 max-w-sm mx-auto mt-1 font-sans leading-relaxed">
+                      This space will dynamically populate with high-fidelity asset stats, estimated output sizes, and high-speed download CTAs once the upscaling network completes execution.
                     </p>
-                    
-                    {/* Resolution Change pill */}
-                    <div className="flex items-center gap-3 mt-3 text-[10px] font-mono font-medium text-slate-400">
-                      <span className="bg-slate-50 border border-slate-200 dark:bg-[#020617] dark:border-white/10 px-2 py-0.5 rounded text-rose-600 dark:text-rose-300">
-                        Original: {beforeRes}
-                      </span>
-                      <span>→</span>
-                      <span className="bg-slate-50 border border-slate-200 dark:bg-[#020617] dark:border-white/10 px-2 py-0.5 rounded text-emerald-600 dark:text-emerald-400 font-bold">
-                        Enhanced: {afterRes}
-                      </span>
-                    </div>
                   </div>
-
-                  {/* Download CTA */}
-                  <button
-                    id="download-result-btn"
-                    onClick={handleDownload}
-                    disabled={isProcessing || !hasProcessed}
-                    className="w-full md:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs tracking-wide bg-gradient-to-r from-[#2563EB] to-[#14B8A6] hover:from-[#2563EB]/90 hover:to-[#14B8A6]/90 text-white transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed shrink-0 font-sans shadow-md"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download Enhanced Asset
-                  </button>
-                </div>
+                )}
               </div>
 
             </motion.div>
