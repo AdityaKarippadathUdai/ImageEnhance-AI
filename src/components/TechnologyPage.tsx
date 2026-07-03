@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Cpu, Terminal, Layers, Database, Code, Shield, Zap, Sparkles, Check, Copy } from 'lucide-react';
+import { Cpu, Terminal, Layers, Check, Copy, CheckCircle2 } from 'lucide-react';
 
 interface TechBlock {
   id: string;
@@ -134,7 +134,7 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
   ];
 
   return (
-    <div className="w-full min-h-screen bg-[#020617] text-[#F8FAFC] py-20 px-4 md:px-8 relative overflow-hidden">
+    <div className="w-full min-h-screen bg-white dark:bg-[#020617] text-slate-900 dark:text-[#F8FAFC] py-20 px-4 md:px-8 relative overflow-hidden">
       {/* Background radial overlays */}
       <div className="absolute top-[20%] right-[-100px] w-[500px] h-[500px] bg-indigo-600/5 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute bottom-[10%] left-[-150px] w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-[160px] pointer-events-none" />
@@ -143,30 +143,30 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
         
         {/* Page Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#14B8A6]/10 border border-[#14B8A6]/20 text-xs text-[#14B8A6] font-mono font-bold mb-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-xs text-[#14B8A6] font-mono font-bold mb-4">
             <Cpu className="w-3.5 h-3.5" />
             ENGINEERING SCHEMATICS
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold tracking-tight text-white mb-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-sans font-extrabold tracking-tight text-slate-900 dark:text-white mb-6">
             The Deep Stack Behind{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] to-[#14B8A6]">
               Sub-Pixel Precision
             </span>
           </h1>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
             Our super-resolution engine is optimized for high-throughput, low-latency creative pipelines. Explore the neural network topologies, mathematically clean upsamplers, and production deployment scripts.
           </p>
         </div>
 
         {/* SECTION 1: Pipeline Interactive Flowchart */}
-        <div className="bg-[#111827]/30 border border-white/10 rounded-3xl p-6 md:p-8 mb-16 text-left relative">
-          <h3 className="text-sm font-semibold text-white flex items-center gap-2 mb-6 border-b border-white/10 pb-4">
+        <div className="bg-slate-50 dark:bg-[#111827]/30 border border-slate-200 dark:border-white/10 rounded-3xl p-6 md:p-8 mb-16 text-left relative shadow-sm">
+          <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-white/10 pb-4">
             <Layers className="w-4.5 h-4.5 text-[#14B8A6]" />
             CNN Computational Pipeline Diagram
           </h3>
 
           {/* Flow Blocks */}
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 mb-8">
             {pipelineSteps.map((step, idx) => {
               const isActive = activePipelineStep === idx;
               return (
@@ -175,16 +175,16 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
                   onClick={() => setActivePipelineStep(idx)}
                   className={`p-4 rounded-xl border transition-all cursor-pointer relative overflow-hidden text-left ${
                     isActive 
-                      ? 'bg-slate-900 border-blue-500/50 shadow-md shadow-blue-500/5' 
-                      : 'bg-slate-950/40 border-white/5 hover:border-white/10'
+                      ? 'bg-white border-[#2563EB]/50 dark:bg-slate-900 dark:border-blue-500/50 shadow-md' 
+                      : 'bg-slate-100/60 dark:bg-slate-950/40 border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 shadow-sm'
                   }`}
                 >
                   {/* Step ID Badge */}
-                  <div className={`text-[9px] font-mono font-bold tracking-wider mb-2 ${isActive ? 'text-blue-400' : 'text-slate-500'}`}>
+                  <div className={`text-[9px] font-mono font-bold tracking-wider mb-2 ${isActive ? 'text-[#2563EB] dark:text-blue-400' : 'text-slate-500'}`}>
                     STEP_0{idx + 1}
                   </div>
-                  <h4 className="text-xs font-bold text-white mb-1.5 font-sans">{step.title}</h4>
-                  <p className="text-[10px] text-slate-400 line-clamp-2 leading-relaxed leading-normal">{step.desc}</p>
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1.5 font-sans">{step.title}</h4>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed leading-normal">{step.desc}</p>
                   
                   {/* Active highlight lines */}
                   {isActive && (
@@ -196,8 +196,8 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
           </div>
 
           {/* Active step readout block */}
-          <div className="p-4 bg-slate-950/60 border border-white/5 rounded-xl font-mono text-xs text-slate-300">
-            <span className="text-emerald-400 font-bold mr-1.5">► [PIPELINE NODE ACTIVE]:</span>
+          <div className="p-4 bg-white dark:bg-slate-950/60 border border-slate-200 dark:border-white/5 rounded-xl font-mono text-xs text-slate-700 dark:text-slate-300 shadow-sm flex items-start gap-1.5">
+            <span className="text-[#2563EB] dark:text-emerald-400 font-bold mr-1.5 shrink-0">► [PIPELINE NODE ACTIVE]:</span>
             <span>{pipelineSteps[activePipelineStep].desc}</span>
           </div>
         </div>
@@ -207,11 +207,11 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
           
           {/* Left Side: Controls & Topology selector */}
           <div className="lg:col-span-5 flex flex-col gap-4 text-left">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FBBF24]">Topology Schematics</span>
-            <h2 className="text-xl md:text-2xl font-sans font-extrabold text-white tracking-tight">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#2563EB] dark:text-[#FBBF24]">Topology Schematics</span>
+            <h2 className="text-xl md:text-2xl font-sans font-extrabold text-slate-900 dark:text-white tracking-tight">
               Network Topology Modules
             </h2>
-            <p className="text-xs text-slate-400 mb-2 leading-relaxed font-sans">
+            <p className="text-xs text-slate-600 dark:text-slate-400 mb-2 leading-relaxed font-sans">
               Select an algorithm block to dissect the mathematical weights, layer configurations, and structural models running on CUDA GPU cores.
             </p>
 
@@ -224,15 +224,15 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
                     onClick={() => setActiveTab(b.id)}
                     className={`p-4 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden group ${
                       isActive 
-                        ? 'bg-slate-900 border-[#14B8A6]/40 text-[#14B8A6] shadow-md' 
-                        : 'bg-[#111827]/25 border-white/5 text-slate-400 hover:text-white hover:bg-slate-900/50'
+                        ? 'bg-white border-[#2563EB]/40 dark:border-[#14B8A6]/40 text-[#2563EB] dark:text-[#14B8A6] shadow-sm' 
+                        : 'bg-slate-50 dark:bg-[#111827]/25 border-slate-200 dark:border-white/5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/50 shadow-sm'
                     }`}
                   >
-                    <div className="font-semibold text-xs font-sans text-white group-hover:text-blue-300 transition-colors">{b.name}</div>
-                    <div className="text-[10px] text-slate-500 mt-1 font-mono">{b.title}</div>
+                    <div className="font-semibold text-xs font-sans text-slate-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">{b.name}</div>
+                    <div className="text-[10px] text-slate-500 dark:text-slate-500 mt-1 font-mono">{b.title}</div>
                     
                     {isActive && (
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#FBBF24] shadow-[0_0_6px_#FBBF24]" />
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#2563EB] dark:bg-[#FBBF24] shadow-[0_0_6px_rgba(37,99,235,0.4)] dark:shadow-[0_0_6px_#FBBF24]" />
                     )}
                   </button>
                 );
@@ -241,7 +241,7 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
           </div>
 
           {/* Right Side: Deep mathematical and spec readouts */}
-          <div className="lg:col-span-7 bg-slate-950/75 border border-white/10 rounded-3xl p-6 md:p-8 text-left relative overflow-hidden min-h-[380px]">
+          <div className="lg:col-span-7 bg-white dark:bg-slate-950/75 border border-slate-200 dark:border-white/10 rounded-3xl p-6 md:p-8 text-left relative overflow-hidden min-h-[380px] shadow-sm dark:shadow-none">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#14B8A6]/10 to-transparent rounded-full blur-2xl pointer-events-none" />
 
             <AnimatePresence mode="wait">
@@ -255,25 +255,25 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
               >
                 <div>
                   <h3 className="text-xs font-bold text-[#14B8A6] font-mono uppercase tracking-widest">{activeBlockObj.title}</h3>
-                  <h2 className="text-lg font-bold text-white mt-1 font-sans">{activeBlockObj.name}</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white mt-1 font-sans">{activeBlockObj.name}</h2>
                 </div>
 
                 {/* Mathematical Equation Block */}
-                <div className="p-4 bg-[#111827]/60 border border-white/5 rounded-xl text-left relative overflow-hidden">
-                  <div className="text-[9px] font-mono text-slate-500 uppercase tracking-widest mb-1.5">Functional Objective</div>
-                  <div className="text-sm font-mono font-bold text-blue-400 select-all">{activeBlockObj.math}</div>
+                <div className="p-4 bg-slate-50 dark:bg-[#111827]/60 border border-slate-200 dark:border-white/5 rounded-xl text-left relative overflow-hidden">
+                  <div className="text-[9px] font-mono text-slate-500 dark:text-slate-500 uppercase tracking-widest mb-1.5">Functional Objective</div>
+                  <div className="text-sm font-mono font-bold text-[#2563EB] dark:text-blue-400 select-all">{activeBlockObj.math}</div>
                 </div>
 
-                <p className="text-xs text-slate-300 leading-relaxed font-sans">
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-sans">
                   {activeBlockObj.description}
                 </p>
 
                 {/* Technical Specifications Matrix */}
-                <div className="grid grid-cols-2 gap-4 border-t border-white/10 pt-5 text-left">
+                <div className="grid grid-cols-2 gap-4 border-t border-slate-200 dark:border-white/10 pt-5 text-left">
                   {Object.entries(activeBlockObj.stats).map(([label, val]) => (
                     <div key={label}>
-                      <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">{label}</span>
-                      <span className="text-xs font-bold text-white mt-1 font-sans">{val}</span>
+                      <span className="text-[9px] text-slate-500 dark:text-slate-500 font-mono uppercase block tracking-wider">{label}</span>
+                      <span className="text-xs font-bold text-slate-900 dark:text-white mt-1 font-sans">{val}</span>
                     </div>
                   ))}
                 </div>
@@ -287,16 +287,16 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           
           <div className="lg:col-span-4 text-left space-y-4">
-            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#FBBF24]">Developer SDK Integration</span>
-            <h2 className="text-xl md:text-2xl font-sans font-extrabold text-white tracking-tight">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-[#2563EB] dark:text-[#FBBF24]">Developer SDK Integration</span>
+            <h2 className="text-xl md:text-2xl font-sans font-extrabold text-slate-900 dark:text-white tracking-tight">
               Production API Integration
             </h2>
-            <p className="text-xs text-slate-400 leading-relaxed font-sans">
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed font-sans">
               Invoke the upscaling CNN from python workloads or server-side scripts. Our endpoint automatically manages tensor memory pools to scale any resolution dynamically.
             </p>
 
             {/* Language Toggles */}
-            <div className="flex gap-1.5 p-1 bg-slate-950/80 border border-white/5 rounded-xl self-start w-fit">
+            <div className="flex gap-1.5 p-1 bg-slate-100 border border-slate-200 dark:bg-slate-950/80 dark:border-white/5 rounded-xl self-start w-fit">
               {['python', 'node'].map((lang) => (
                 <button
                   key={lang}
@@ -304,7 +304,7 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
                   className={`px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono uppercase tracking-wider transition-all cursor-pointer ${
                     selectedLanguage === lang
                       ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-white shadow-md'
-                      : 'text-slate-400 hover:text-white'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   {lang === 'python' ? 'Python SDK' : 'Node.js REST'}
@@ -313,8 +313,8 @@ console.log(\`Refinement resolved. Target output dimension: \${response.data.res
             </div>
           </div>
 
-          <div className="lg:col-span-8 bg-slate-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative text-left">
-            <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-white/5">
+          <div className="lg:col-span-8 bg-slate-950 border border-slate-800 dark:border-white/10 rounded-2xl overflow-hidden shadow-lg dark:shadow-2xl relative text-left">
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800 dark:border-white/5">
               <span className="text-[10px] font-mono text-slate-400 flex items-center gap-1.5">
                 <Terminal className="w-3.5 h-3.5 text-[#14B8A6]" />
                 {codeSnippets[selectedLanguage].title}

@@ -11,20 +11,20 @@ export default function FAQSection() {
   };
 
   return (
-    <div id="faq" className="w-full py-20 px-4 md:px-8 border-b border-white/10 bg-[#020617]/40 relative">
+    <div id="faq" className="w-full py-20 px-4 md:px-8 border-b border-slate-200 dark:border-white/10 bg-slate-50/30 dark:bg-[#020617]/40 relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_10%,rgba(37,99,235,0.02),transparent_40%)] pointer-events-none"></div>
 
       <div className="max-w-4xl mx-auto">
         {/* Section Title */}
         <div className="flex flex-col items-center text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 font-semibold mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-[#2563EB] dark:text-blue-400 font-semibold mb-3">
             <HelpCircle className="w-3.5 h-3.5" />
             SUPPORT KNOWLEDGE
           </div>
-          <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-white mb-3">
+          <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-slate-900 dark:text-white mb-3">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm text-slate-400">
+          <p className="text-sm text-slate-600 dark:text-slate-400">
             Everything you need to know about PixelBoost AI upscaling algorithms and credit parameters.
           </p>
         </div>
@@ -36,15 +36,15 @@ export default function FAQSection() {
             return (
               <div
                 key={index}
-                className="bg-[#111827]/40 border border-white/10 hover:border-white/20 rounded-xl overflow-hidden transition-all duration-200 text-left backdrop-blur-md"
+                className="bg-white dark:bg-[#111827]/40 border border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20 rounded-xl overflow-hidden transition-all duration-200 text-left backdrop-blur-md shadow-sm"
               >
                 <button
                   id={`faq-btn-${index}`}
                   onClick={() => toggleItem(index)}
-                  className="w-full px-6 py-4 flex items-center justify-between text-slate-200 hover:text-white transition-colors cursor-pointer outline-none focus:bg-[#111827]/80"
+                  className="w-full px-6 py-4 flex items-center justify-between text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer outline-none focus:bg-slate-50 dark:focus:bg-[#111827]/80"
                 >
                   <span className="text-sm font-semibold pr-4">{item.question}</span>
-                  <div className="text-slate-400 shrink-0">
+                  <div className="text-slate-500 dark:text-slate-400 shrink-0">
                     {isOpen ? (
                       <ChevronUp className="w-4.5 h-4.5 text-[#14B8A6]" />
                     ) : (
@@ -62,7 +62,7 @@ export default function FAQSection() {
                       exit={{ height: 0, opacity: 0 }}
                       transition={{ duration: 0.2, ease: 'easeInOut' }}
                     >
-                      <div className="px-6 pb-5 pt-1 text-xs text-slate-400 leading-relaxed border-t border-white/10 bg-[#020617]/40">
+                      <div className="px-6 pb-5 pt-1 text-xs text-slate-600 dark:text-slate-400 leading-relaxed border-t border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-[#020617]/40">
                         {item.answer}
                       </div>
                     </motion.div>
@@ -74,17 +74,17 @@ export default function FAQSection() {
         </div>
 
         {/* Still have questions banner */}
-        <div className="mt-12 p-6 bg-[#111827]/40 border border-white/10 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left backdrop-blur-md">
+        <div className="mt-12 p-6 bg-white dark:bg-[#111827]/40 border border-slate-200 dark:border-white/10 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left backdrop-blur-md shadow-sm">
           <div>
-            <h4 className="text-xs font-semibold text-white">Still have custom engineering questions?</h4>
-            <p className="text-[11px] text-slate-400 mt-1">Our support engineers can consult on pipeline clusters and deep models.</p>
+            <h4 className="text-xs font-semibold text-slate-900 dark:text-white">Still have custom engineering questions?</h4>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1">Our support engineers can consult on pipeline clusters and deep models.</p>
           </div>
           <button 
             onClick={() => {
               const pricingEl = document.getElementById('pricing');
               pricingEl?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-4 py-2 bg-[#020617] border border-white/10 hover:border-white/20 text-xs font-semibold text-slate-200 rounded-xl cursor-pointer"
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-200 hover:border-slate-300 text-xs font-semibold text-slate-800 dark:bg-[#020617] dark:border-white/10 dark:hover:border-white/20 dark:text-slate-200 rounded-xl cursor-pointer transition-all"
           >
             Contact Engineering Team
           </button>

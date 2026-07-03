@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Sliders, Sparkles, Image as ImageIcon, Download, Check, AlertCircle, Cpu, RefreshCw, Layers, Info } from 'lucide-react';
+import { Upload, Sliders, Sparkles, Image as ImageIcon, Download, AlertCircle, Cpu, RefreshCw, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ProcessingStep } from '../types';
 
@@ -196,7 +196,7 @@ export default function UpscalePlayground() {
   const displayUpscaled = customImage || '';
 
   return (
-    <div id="playground" className="w-full py-16 px-4 md:px-8 border-b border-white/10 bg-[#020617]/50 backdrop-blur-md relative overflow-hidden">
+    <div id="playground" className="w-full py-16 px-4 md:px-8 border-b border-slate-200 dark:border-white/10 bg-slate-50/20 dark:bg-[#020617]/50 backdrop-blur-md relative overflow-hidden">
       {/* Injecting CSS Keyframes specifically for the dashing border effect */}
       <style>{`
         @keyframes border-dash {
@@ -214,14 +214,14 @@ export default function UpscalePlayground() {
       <div className="max-w-7xl mx-auto">
         {/* Section Title */}
         <div className="flex flex-col items-center text-center mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 font-semibold mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-xs text-[#2563EB] dark:text-blue-400 font-semibold mb-3">
             <Sparkles className="w-3.5 h-3.5" />
             LIVE PLAYGROUND
           </div>
-          <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-white mb-3">
+          <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-slate-900 dark:text-white mb-3">
             Real-ESRGAN x4+ Super-Resolution
           </h2>
-          <p className="text-sm md:text-base text-slate-400 max-w-2xl">
+          <p className="text-sm md:text-base text-slate-600 dark:text-slate-400 max-w-2xl font-sans">
             Upload your low-fidelity images or photos. Our frontend pipeline simulates the Real-ESRGAN deep residual networks to reconstruct crisp, high-frequency details.
           </p>
         </div>
@@ -245,11 +245,11 @@ export default function UpscalePlayground() {
                 onDragLeave={handleDrag}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`relative w-full max-w-2xl rounded-3xl p-10 md:p-12 backdrop-blur-xl bg-[#090d16]/75 border border-white/10 hover:border-blue-500/35 transition-all duration-300 group overflow-hidden cursor-pointer text-center select-none shadow-[0_0_80px_rgba(37,99,235,0.12)] ${
-                  isDragActive ? 'border-blue-400 bg-blue-500/5' : ''
+                className={`relative w-full max-w-2xl rounded-3xl p-10 md:p-12 backdrop-blur-xl bg-white dark:bg-[#090d16]/75 border border-slate-200 dark:border-white/10 hover:border-[#2563EB]/35 dark:hover:border-blue-500/35 transition-all duration-300 group overflow-hidden cursor-pointer text-center select-none shadow-[0_10px_50px_rgba(37,99,235,0.06)] dark:shadow-[0_0_80px_rgba(37,99,235,0.12)] ${
+                  isDragActive ? 'border-blue-450 bg-blue-500/5' : ''
                 }`}
               >
-                {/* SVG Animated Dashed Border (Blue animation) */}
+                {/* SVG Animated Dashed Border */}
                 <svg className="absolute inset-0 w-full h-full rounded-3xl pointer-events-none" xmlns="http://www.w3.org/2000/svg">
                   <rect
                     x="1.5"
@@ -286,33 +286,33 @@ export default function UpscalePlayground() {
                   />
 
                   {/* Large Upload Icon with active halo & pulsate */}
-                  <div className="w-20 h-20 rounded-full bg-blue-600/10 border border-blue-500/25 flex items-center justify-center mb-6 text-blue-400 shadow-[0_0_30px_rgba(37,99,235,0.1)] group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(37,99,235,0.25)] group-hover:text-[#14B8A6] transition-all duration-300">
+                  <div className="w-20 h-20 rounded-full bg-blue-500/10 border border-blue-500/25 flex items-center justify-center mb-6 text-[#2563EB] dark:text-blue-400 shadow-[0_4px_20px_rgba(37,99,235,0.08)] dark:shadow-[0_0_30px_rgba(37,99,235,0.1)] group-hover:scale-110 group-hover:shadow-[0_0_40px_rgba(37,99,235,0.25)] group-hover:text-[#14B8A6] transition-all duration-300">
                     <Upload className="w-9 h-9" />
                   </div>
 
                   {/* Title & Prompt */}
-                  <h3 className="text-xl font-sans font-bold text-white mb-2 tracking-tight">
+                  <h3 className="text-xl font-sans font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
                     Drag, Drop or Paste Image to start
                   </h3>
-                  <p className="text-sm text-slate-400 max-w-sm mb-8 leading-relaxed">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm mb-8 leading-relaxed font-sans">
                     Select a low-resolution photo or compressed graphic. The Real-ESRGAN x4+ model will synthesize details.
                   </p>
 
                   {/* Supported formats & Max size details */}
                   <div className="flex flex-wrap justify-center gap-3 mb-6">
                     {['PNG', 'JPEG', 'WEBP'].map((format) => (
-                      <span key={format} className="px-3 py-1 rounded-md bg-[#111827]/80 border border-white/5 text-[10px] font-bold font-mono text-slate-300 tracking-wider">
+                      <span key={format} className="px-3 py-1 rounded-md bg-slate-100 dark:bg-[#111827]/80 border border-slate-200 dark:border-white/5 text-[10px] font-bold font-mono text-slate-700 dark:text-slate-300 tracking-wider">
                         {format}
                       </span>
                     ))}
-                    <span className="px-3 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-[10px] font-bold font-mono text-rose-300 tracking-wider">
+                    <span className="px-3 py-1 rounded-md bg-rose-500/10 border border-rose-500/20 text-[10px] font-bold font-mono text-rose-600 dark:text-rose-300 tracking-wider">
                       MAX 10 MB
                     </span>
                   </div>
 
                   {/* Interactive Paste Keyboard Cues */}
                   <div className="text-[10px] text-slate-500 font-mono flex items-center gap-1.5 mb-6">
-                    <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px]">Ctrl</span> + <span className="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[9px]">V</span> to paste clipboard image
+                    <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 dark:bg-white/5 dark:border-white/10 text-[9px]">Ctrl</span> + <span className="px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 dark:bg-white/5 dark:border-white/10 text-[9px]">V</span> to paste clipboard image
                   </div>
 
                   {/* Contextual Validation Feedback */}
@@ -320,18 +320,18 @@ export default function UpscalePlayground() {
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 border border-rose-500/20 rounded-lg text-xs text-rose-400 font-medium mb-6 text-left"
+                      className="flex items-center gap-1.5 px-3 py-2 bg-rose-500/10 border border-rose-500/20 rounded-lg text-xs text-rose-550 dark:text-rose-400 font-medium mb-6 text-left animate-fade-in"
                     >
-                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
+                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400" />
                       <span>{uploadError}</span>
                     </motion.div>
                   )}
 
                   {/* Demo Image Trigger */}
-                  <div className="border-t border-white/5 pt-6 w-full flex justify-center">
+                  <div className="border-t border-slate-200 dark:border-white/5 pt-6 w-full flex justify-center">
                     <button
                       onClick={handleLoadDemo}
-                      className="px-4 py-2 rounded-xl text-xs font-bold tracking-wide text-[#14B8A6] bg-[#14B8A6]/10 border border-[#14B8A6]/20 hover:bg-[#14B8A6]/20 hover:scale-105 transition-all cursor-pointer shadow-lg shadow-teal-500/5"
+                      className="px-4 py-2 rounded-xl text-xs font-bold tracking-wide text-teal-700 dark:text-[#14B8A6] bg-teal-500/10 border border-teal-500/20 hover:bg-teal-500/20 hover:scale-105 transition-all cursor-pointer shadow-md shadow-teal-500/5"
                     >
                       💡 Or load alpine demo image
                     </button>
@@ -353,13 +353,13 @@ export default function UpscalePlayground() {
               <div className="lg:col-span-5 flex flex-col gap-6">
                 
                 {/* Compact Glass Preview Card (Replacing Upload State) */}
-                <div className="relative w-full rounded-2xl p-5 backdrop-blur-xl bg-[#090d16]/75 border border-white/10 shadow-xl overflow-hidden group text-left">
-                  <div className="absolute inset-0 border border-white/5 rounded-2xl pointer-events-none group-hover:border-blue-500/20 transition-colors" />
+                <div className="relative w-full rounded-2xl p-5 backdrop-blur-xl bg-white dark:bg-[#090d16]/75 border border-slate-200 dark:border-white/10 shadow-sm overflow-hidden group text-left">
+                  <div className="absolute inset-0 border border-slate-200 dark:border-white/5 rounded-2xl pointer-events-none group-hover:border-[#2563EB]/20 transition-colors" />
 
                   <div className="relative z-10 flex flex-col gap-4">
                     {/* Header with name and removal action */}
-                    <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                      <span className="text-[10px] uppercase font-bold tracking-wider text-[#14B8A6] flex items-center gap-1.5 font-mono">
+                    <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-teal-700 dark:text-[#14B8A6] flex items-center gap-1.5 font-mono">
                         <ImageIcon className="w-3.5 h-3.5" />
                         Active Source Asset
                       </span>
@@ -372,14 +372,14 @@ export default function UpscalePlayground() {
                           setHasProcessed(false);
                           setUploadError(null);
                         }}
-                        className="text-[10px] text-rose-400 hover:text-rose-300 font-bold font-sans flex items-center gap-1 cursor-pointer transition-colors"
+                        className="text-[10px] text-rose-500 hover:text-rose-600 dark:text-rose-400 dark:hover:text-rose-300 font-bold font-sans flex items-center gap-1 cursor-pointer transition-colors"
                       >
                         Remove Image
                       </button>
                     </div>
 
                     {/* Image Preview Window */}
-                    <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-white/10 bg-slate-950/40 flex items-center justify-center">
+                    <div className="relative aspect-video w-full rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 bg-slate-100 dark:bg-slate-950/40 flex items-center justify-center">
                       <img
                         src={customImage}
                         alt="Uploaded source preview"
@@ -394,17 +394,17 @@ export default function UpscalePlayground() {
                 </div>
 
                 {/* Parametrization Drawer */}
-                <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-sm dark:shadow-xl relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#2563EB]/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
                   
-                  <h3 className="text-sm font-semibold text-white flex items-center gap-2 mb-6 border-b border-white/10 pb-3 font-sans">
+                  <h3 className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2 mb-6 border-b border-slate-200 dark:border-white/10 pb-3 font-sans">
                     <Sliders className="w-4 h-4 text-[#14B8A6]" />
                     Upscale Parameters
                   </h3>
 
                   {/* Scale Options */}
                   <div className="mb-6">
-                    <label className="text-xs font-semibold text-[#CBD5E1] block mb-2 font-sans uppercase tracking-wider">
+                    <label className="text-xs font-semibold text-slate-700 dark:text-[#CBD5E1] block mb-2 font-sans uppercase tracking-wider">
                       Scale Factor
                     </label>
                     <div className="grid grid-cols-2 gap-2">
@@ -412,10 +412,10 @@ export default function UpscalePlayground() {
                         <button
                           key={factor}
                           onClick={() => setScaleFactor(factor)}
-                          className={`py-2 text-xs font-bold rounded-lg border transition-all ${
+                          className={`py-2 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
                             scaleFactor === factor
                               ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] border-transparent text-white shadow-lg shadow-blue-500/10 font-sans'
-                              : 'bg-[#020617] border-white/10 text-slate-400 hover:border-white/20 font-sans'
+                              : 'bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300 dark:bg-[#020617] dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20 font-sans'
                           }`}
                         >
                           {factor}x
@@ -425,8 +425,8 @@ export default function UpscalePlayground() {
                   </div>
 
                   {/* Active Model Specification */}
-                  <div className="bg-[#020617]/60 border border-white/10 rounded-xl p-4 font-sans space-y-4 mb-6">
-                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/10 pb-2 flex items-center gap-1.5">
+                  <div className="bg-slate-50 dark:bg-[#020617]/60 border border-slate-200 dark:border-white/10 rounded-xl p-4 font-sans space-y-4 mb-6">
+                    <div className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-white/10 pb-2 flex items-center gap-1.5">
                       <Info className="w-3.5 h-3.5 text-[#14B8A6]" />
                       Active Model Specification
                     </div>
@@ -434,19 +434,19 @@ export default function UpscalePlayground() {
                     <div className="grid grid-cols-2 gap-y-3.5 gap-x-4 text-left">
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">Original Res</span>
-                        <span className="text-xs font-bold text-white font-mono">{beforeRes}</span>
+                        <span className="text-xs font-bold text-slate-800 dark:text-white font-mono">{beforeRes}</span>
                       </div>
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">Estimated Output</span>
-                        <span className="text-xs font-bold text-[#14B8A6] font-mono">{afterRes}</span>
+                        <span className="text-xs font-bold text-teal-600 dark:text-[#14B8A6] font-mono">{afterRes}</span>
                       </div>
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">AI Model</span>
-                        <span className="text-xs font-bold text-white font-sans">Real-ESRGAN x4+</span>
+                        <span className="text-xs font-bold text-slate-850 dark:text-white font-sans">Real-ESRGAN x4+</span>
                       </div>
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">Device</span>
-                        <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                        <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                           CUDA (GPU)
                         </span>
@@ -467,29 +467,29 @@ export default function UpscalePlayground() {
 
                   {/* Custom Upload info text */}
                   {!hasProcessed && (
-                    <div className="mt-3 flex items-start gap-1.5 p-2 bg-[#FBBF24]/10 border border-[#FBBF24]/20 rounded-lg text-[10px] text-[#FBBF24] font-medium font-sans text-left">
+                    <div className="mt-3 flex items-start gap-1.5 p-2 bg-[#FBBF24]/10 border border-[#FBBF24]/20 rounded-lg text-[10px] text-amber-700 dark:text-[#FBBF24] font-semibold font-sans text-left animate-fade-in">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#FBBF24] mt-0.5" />
-                      <span>Image loaded. Click "Enhance Image" to execute Real-ESRGAN neural upscaling.</span>
+                      <span>Image loaded. Click "Enhance Image" to execute Real-ESRGAN upscaling.</span>
                     </div>
                   )}
                 </div>
 
                 {/* Neural Net Processing Console/Logs */}
-                <div className="bg-[#020617]/80 backdrop-blur-md border border-white/10 rounded-2xl p-5 shadow-xl font-mono text-left">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-3">
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center gap-1.5">
+                <div className="bg-slate-50 dark:bg-[#020617]/80 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-5 shadow-sm dark:shadow-xl font-mono text-left">
+                  <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-2 mb-3">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                       <Cpu className="w-3.5 h-3.5 text-[#14B8A6]" />
                       Core Pipeline Log
                     </span>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#111827] border border-white/10 text-slate-400">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 dark:bg-[#111827] border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-400 font-semibold">
                       GPU_A100_ACTIVE
                     </span>
                   </div>
 
                   {/* Logs area */}
-                  <div className="h-28 overflow-y-auto text-[10px] text-slate-400 flex flex-col gap-1 pr-1">
+                  <div className="h-28 overflow-y-auto text-[10px] text-slate-700 dark:text-slate-400 flex flex-col gap-1 pr-1">
                     {processingLogs.length === 0 ? (
-                      <span className="text-slate-600 italic">Console idling. Run enhance to stream CNN state parameters...</span>
+                      <span className="text-slate-400 dark:text-slate-600 italic">Console idling. Run enhance to stream CNN state parameters...</span>
                     ) : (
                       processingLogs.map((log, index) => {
                         const isSuccess = log.includes('SUCCESS');
@@ -498,7 +498,7 @@ export default function UpscalePlayground() {
                           <div 
                             key={index} 
                             className={`leading-relaxed ${
-                              isSuccess ? 'text-emerald-400 font-semibold' : isStep ? 'text-slate-300' : 'text-slate-500'
+                              isSuccess ? 'text-emerald-600 dark:text-emerald-400 font-semibold' : isStep ? 'text-slate-800 dark:text-slate-300' : 'text-slate-500'
                             }`}
                           >
                             {log}
@@ -511,11 +511,11 @@ export default function UpscalePlayground() {
                   {/* Progress Bar */}
                   {isProcessing && (
                     <div className="mt-4">
-                      <div className="flex justify-between text-[10px] font-semibold text-slate-400 mb-1">
+                      <div className="flex justify-between text-[10px] font-semibold text-slate-500 dark:text-slate-400 mb-1">
                         <span>PROCESSING GRID</span>
                         <span>{progress}%</span>
                       </div>
-                      <div className="w-full bg-[#111827] h-1.5 rounded-full overflow-hidden">
+                      <div className="w-full bg-slate-200 dark:bg-[#111827] h-1.5 rounded-full overflow-hidden">
                         <div 
                           className="bg-gradient-to-r from-[#2563EB] to-[#14B8A6] h-full transition-all duration-300 ease-out"
                           style={{ width: `${progress}%` }}
@@ -527,20 +527,20 @@ export default function UpscalePlayground() {
 
               </div>
 
-              {/* RIGHT COLUMN: Viewports comparison & Download action (7 Cols) */}
+              {/* RIGHT COLUMN: Viewports comparison & Download action */}
               <div className="lg:col-span-7 flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   
                   {/* Left Viewport: Original Low-Res */}
-                  <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col justify-between">
+                  <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-between shadow-sm">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold bg-white/5 px-2.5 py-1 rounded">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-600 dark:text-slate-400 font-bold bg-slate-100 dark:bg-white/5 px-2.5 py-1 rounded">
                         Original Input
                       </span>
                       <span className="text-[10px] font-mono text-slate-500 font-medium">{beforeRes}</span>
                     </div>
                     
-                    <div className="relative aspect-square rounded-xl overflow-hidden border border-white/5 bg-[#020617]/80 flex items-center justify-center group min-h-[250px]">
+                    <div className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#020617]/80 flex items-center justify-center group min-h-[250px]">
                       <img
                         src={displayOriginal}
                         alt="Original low-res input"
@@ -548,24 +548,24 @@ export default function UpscalePlayground() {
                         className="max-w-full max-h-full object-contain filter blur-[0.5px] transition-transform duration-300 group-hover:scale-[1.03]"
                         style={{ imageRendering: 'pixelated' }}
                       />
-                      <div className="absolute bottom-3 left-3 bg-slate-950/80 backdrop-blur-md border border-white/5 text-[9px] font-mono px-2 py-0.5 rounded text-slate-400">
+                      <div className="absolute bottom-3 left-3 bg-white/90 dark:bg-slate-950/80 backdrop-blur-md border border-slate-200 dark:border-white/5 text-[9px] font-mono px-2 py-0.5 rounded text-slate-600 dark:text-slate-400 shadow-sm">
                         Low-Fidelity
                       </div>
                     </div>
                   </div>
 
                   {/* Right Viewport: Enhanced Output */}
-                  <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
+                  <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-sm">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[10px] font-mono uppercase tracking-wider text-[#14B8A6] font-bold bg-[#14B8A6]/10 px-2.5 py-1 rounded">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-teal-700 dark:text-[#14B8A6] font-bold bg-teal-500/10 px-2.5 py-1 rounded">
                         Enhanced Output
                       </span>
-                      <span className="text-[10px] font-mono text-[#14B8A6] font-bold">
+                      <span className="text-[10px] font-mono text-[#2563EB] dark:text-[#14B8A6] font-bold">
                         {isProcessing ? 'Processing...' : afterRes}
                       </span>
                     </div>
 
-                    <div className="relative aspect-square rounded-xl overflow-hidden border border-white/5 bg-[#020617]/80 flex items-center justify-center group min-h-[250px]">
+                    <div className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 dark:border-white/5 bg-slate-50 dark:bg-[#020617]/80 flex items-center justify-center group min-h-[250px]">
                       <AnimatePresence mode="wait">
                         {isProcessing && (
                           <motion.div
@@ -573,11 +573,11 @@ export default function UpscalePlayground() {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
-                            className="absolute inset-0 bg-[#020617]/95 flex flex-col items-center justify-center gap-3 z-10"
+                            className="absolute inset-0 bg-white/95 dark:bg-[#020617]/95 flex flex-col items-center justify-center gap-3 z-10"
                           >
-                            <RefreshCw className="w-8 h-8 text-[#14B8A6] animate-spin" />
+                            <RefreshCw className="w-8 h-8 text-[#2563EB] dark:text-[#14B8A6] animate-spin" />
                             <div className="text-center">
-                              <p className="text-[11px] font-mono text-slate-300 font-semibold tracking-wider uppercase">
+                              <p className="text-[11px] font-mono text-slate-800 dark:text-slate-300 font-bold tracking-wider uppercase">
                                 MODEL INFERENCE ACTIVE
                               </p>
                               <p className="text-[10px] font-mono text-slate-500 mt-1">
@@ -589,9 +589,9 @@ export default function UpscalePlayground() {
                       </AnimatePresence>
 
                       {!hasProcessed && !isProcessing ? (
-                        <div className="absolute inset-0 bg-[#020617]/95 flex flex-col items-center justify-center text-center p-5 z-10">
-                          <Sparkles className="w-8 h-8 text-slate-600 mb-3 animate-pulse" />
-                          <p className="text-[11px] font-mono text-slate-400 font-bold uppercase tracking-wider">
+                        <div className="absolute inset-0 bg-slate-50/95 dark:bg-[#020617]/95 flex flex-col items-center justify-center text-center p-5 z-10">
+                          <Sparkles className="w-8 h-8 text-slate-400 dark:text-slate-600 mb-3 animate-pulse" />
+                          <p className="text-[11px] font-mono text-slate-600 dark:text-slate-400 font-bold uppercase tracking-wider">
                             Awaiting Enhancement
                           </p>
                           <p className="text-[10px] text-slate-500 max-w-[200px] mt-1.5 font-sans leading-relaxed">
@@ -600,14 +600,14 @@ export default function UpscalePlayground() {
                         </div>
                       ) : (
                         <img
-                          src={displayUpscaled}
-                          alt="Enhanced output"
-                          referrerPolicy="no-referrer"
-                          className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                           src={displayUpscaled}
+                           alt="Enhanced output"
+                           referrerPolicy="no-referrer"
+                           className="max-w-full max-h-full object-contain transition-transform duration-300 group-hover:scale-[1.03]"
                         />
                       )}
 
-                      <div className="absolute bottom-3 left-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-[9px] font-mono px-2 py-0.5 rounded text-white font-semibold">
+                      <div className="absolute bottom-3 left-3 bg-gradient-to-r from-[#2563EB] to-[#14B8A6] text-[9px] font-mono px-2 py-0.5 rounded text-white font-semibold shadow">
                         Super-Resolved ({scaleFactor}x)
                       </div>
                     </div>
@@ -616,22 +616,22 @@ export default function UpscalePlayground() {
                 </div>
 
                 {/* Quick Stats and Download Suite */}
-                <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-sm">
                   <div className="text-left">
-                    <h4 className="text-xs font-semibold text-[#CBD5E1]">
+                    <h4 className="text-xs font-bold text-slate-800 dark:text-[#CBD5E1]">
                       Custom Super-Resolution Output
                     </h4>
-                    <p className="text-[11px] text-slate-400 mt-1 max-w-md font-sans">
+                    <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 max-w-md font-sans leading-relaxed">
                       Upscaled using Real-ESRGAN x4+ model at {scaleFactor}x factor. Intact geometry with reconstructed edge sharpness.
                     </p>
                     
                     {/* Resolution Change pill */}
                     <div className="flex items-center gap-3 mt-3 text-[10px] font-mono font-medium text-slate-400">
-                      <span className="bg-[#020617] border border-white/10 px-2 py-0.5 rounded text-rose-300">
+                      <span className="bg-slate-50 border border-slate-200 dark:bg-[#020617] dark:border-white/10 px-2 py-0.5 rounded text-rose-600 dark:text-rose-300">
                         Original: {beforeRes}
                       </span>
                       <span>→</span>
-                      <span className="bg-[#020617] border border-white/10 px-2 py-0.5 rounded text-emerald-400 font-bold">
+                      <span className="bg-slate-50 border border-slate-200 dark:bg-[#020617] dark:border-white/10 px-2 py-0.5 rounded text-emerald-600 dark:text-emerald-400 font-bold">
                         Enhanced: {afterRes}
                       </span>
                     </div>
@@ -642,7 +642,7 @@ export default function UpscalePlayground() {
                     id="download-result-btn"
                     onClick={handleDownload}
                     disabled={isProcessing || !hasProcessed}
-                    className="w-full md:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs tracking-wide bg-gradient-to-r from-[#2563EB] to-[#14B8A6] hover:from-[#2563EB]/90 hover:to-[#14B8A6]/90 text-white transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shrink-0 font-sans shadow-md"
+                    className="w-full md:w-auto px-5 py-2.5 rounded-xl font-semibold text-xs tracking-wide bg-gradient-to-r from-[#2563EB] to-[#14B8A6] hover:from-[#2563EB]/90 hover:to-[#14B8A6]/90 text-white transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed shrink-0 font-sans shadow-md"
                   >
                     <Download className="w-4 h-4" />
                     Download Enhanced Asset

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Terminal, Copy, Check, RefreshCw, Code, Play, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { Terminal, Copy, Check, RefreshCw, Play, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { API_CODE_SNIPPETS } from '../data';
 
 export default function ApiPlayground() {
@@ -55,32 +55,32 @@ export default function ApiPlayground() {
   const activeSnippet = API_CODE_SNIPPETS.find(s => s.language === activeLang)?.code.replace('pb_live_8f3d8...', apiKey) || '';
 
   return (
-    <div id="api-bench" className="w-full py-20 px-4 md:px-8 border-b border-white/10 bg-[#020617]/60 relative">
+    <div id="api-bench" className="w-full py-20 px-4 md:px-8 border-b border-slate-200 dark:border-white/10 bg-slate-50/20 dark:bg-[#020617]/60 relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(20,184,166,0.05),transparent_45%)] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* LEFT: Developer Info & API Config (5 Cols) */}
+          {/* LEFT: Developer Info & API Config */}
           <div className="lg:col-span-5 text-left">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-400 font-semibold mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-xs text-cyan-600 dark:text-cyan-400 font-semibold mb-3">
               <Terminal className="w-3.5 h-3.5" />
               DEVELOPER SUITE
             </div>
-            <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-slate-900 dark:text-white mb-4">
               Integrate 4K Upscaling in 5 Lines of Code
             </h2>
-            <p className="text-sm text-slate-400 leading-relaxed mb-8 font-sans">
+            <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-8 font-sans">
               PixelBoost provides an ultra-low latency REST API designed to power design systems, e-commerce assets pipelines, and user-generated content applications. Up to 8x resolution multipliers are accessible programmatically.
             </p>
 
             {/* API Key management block */}
-            <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-6">
+            <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-5 mb-6 shadow-sm">
               <div className="flex items-center justify-between mb-3 font-sans">
-                <span className="text-[11px] font-mono uppercase font-bold text-slate-400">Your Sandbox API Key</span>
+                <span className="text-[11px] font-mono uppercase font-bold text-slate-500 dark:text-slate-400">Your Sandbox API Key</span>
                 <button
                   onClick={generateNewKey}
-                  className="text-[10px] text-cyan-400 hover:text-cyan-300 font-medium flex items-center gap-1 cursor-pointer"
+                  className="text-[10px] text-[#2563EB] dark:text-cyan-400 hover:text-blue-700 dark:hover:text-cyan-300 font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <RefreshCw className="w-3 h-3" /> Roll Key
                 </button>
@@ -88,52 +88,52 @@ export default function ApiPlayground() {
 
               {/* Input copy suite */}
               <div className="flex gap-2">
-                <div className="flex-1 bg-[#020617] border border-white/10 rounded-xl px-3 py-2.5 font-mono text-[11px] text-[#CBD5E1] select-all truncate">
+                <div className="flex-1 bg-slate-50 dark:bg-[#020617] border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2.5 font-mono text-[11px] text-slate-800 dark:text-[#CBD5E1] select-all truncate">
                   {apiKey}
                 </div>
                 <button
                   onClick={() => copyToClipboard(apiKey, 'key')}
-                  className="bg-[#020617] hover:bg-[#111827] border border-white/10 hover:border-white/20 p-2.5 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0"
+                  className="bg-slate-50 hover:bg-slate-100 dark:bg-[#020617] dark:hover:bg-[#111827] border border-slate-200 dark:border-white/10 dark:hover:border-white/20 p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0 shadow-sm"
                   title="Copy Key"
                 >
-                  {copiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                  {copiedKey ? <Check className="w-4 h-4 text-emerald-500 dark:text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
 
               <div className="flex items-start gap-1.5 mt-3 text-[10px] text-slate-500 leading-normal font-sans">
-                <ShieldAlert className="w-3.5 h-3.5 text-slate-600 shrink-0 mt-0.5" />
+                <ShieldAlert className="w-3.5 h-3.5 text-slate-400 dark:text-slate-600 shrink-0 mt-0.5" />
                 <span>Keep this key secret. Authorization headers must use standard Bearer token encryption. Do not expose this key inside client-side bundles.</span>
               </div>
             </div>
 
             {/* Features lists */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#111827]/20 p-3 rounded-xl border border-white/10 font-sans">
-                <div className="text-xs font-semibold text-slate-300">Warm Convolutions</div>
+              <div className="bg-slate-100/60 dark:bg-[#111827]/20 p-3 rounded-xl border border-slate-200 dark:border-white/10 font-sans shadow-sm">
+                <div className="text-xs font-semibold text-slate-800 dark:text-slate-300">Warm Convolutions</div>
                 <div className="text-[10px] text-slate-500 mt-0.5 font-mono">1.1s average cold-start time</div>
               </div>
-              <div className="bg-[#111827]/20 p-3 rounded-xl border border-white/10 font-sans">
-                <div className="text-xs font-semibold text-slate-300">Webhook Callbacks</div>
+              <div className="bg-slate-100/60 dark:bg-[#111827]/20 p-3 rounded-xl border border-slate-200 dark:border-white/10 font-sans shadow-sm">
+                <div className="text-xs font-semibold text-slate-800 dark:text-slate-300">Webhook Callbacks</div>
                 <div className="text-[10px] text-slate-500 mt-0.5 font-mono">Receive scaled URLs directly</div>
               </div>
             </div>
           </div>
 
-          {/* RIGHT: Live Code & Terminal Suite (7 Cols) */}
+          {/* RIGHT: Live Code & Terminal Suite */}
           <div className="lg:col-span-7">
-            <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-1.5 shadow-2xl overflow-hidden flex flex-col">
+            <div className="bg-white dark:bg-[#111827]/40 backdrop-blur-md border border-slate-200 dark:border-white/10 rounded-2xl p-1.5 shadow-lg dark:shadow-2xl overflow-hidden flex flex-col">
               
               {/* Tabs for Languages & Actions */}
-              <div className="flex items-center justify-between bg-[#020617]/80 border-b border-white/10 rounded-t-xl px-4 py-2">
+              <div className="flex items-center justify-between bg-slate-50 dark:bg-[#020617]/80 border-b border-slate-200 dark:border-white/10 rounded-t-xl px-4 py-2">
                 <div className="flex gap-2">
                   {['curl', 'javascript', 'python'].map((lang) => (
                     <button
                       key={lang}
                       onClick={() => setActiveLang(lang)}
-                      className={`px-2.5 py-1 text-[11px] font-mono font-medium rounded-md transition-colors cursor-pointer ${
+                      className={`px-2.5 py-1 text-[11px] font-mono font-semibold rounded-md transition-colors cursor-pointer ${
                         activeLang === lang
-                          ? 'bg-[#111827] border border-white/10 text-[#14B8A6]'
-                          : 'text-slate-500 hover:text-slate-300'
+                          ? 'bg-white border border-slate-200 text-[#2563EB] dark:bg-[#111827] dark:border-white/10 dark:text-[#14B8A6] shadow-sm'
+                          : 'text-slate-500 hover:text-slate-800 dark:text-slate-500 dark:hover:text-slate-300'
                       }`}
                     >
                       {lang === 'javascript' ? 'JavaScript' : lang === 'python' ? 'Python' : 'cURL'}
@@ -145,11 +145,11 @@ export default function ApiPlayground() {
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() => copyToClipboard(activeSnippet, 'code')}
-                    className="text-[10px] text-slate-400 hover:text-slate-200 flex items-center gap-1 cursor-pointer font-medium"
+                    className="text-[10px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 flex items-center gap-1 cursor-pointer font-semibold"
                   >
                     {copiedCode ? (
                       <>
-                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <Check className="w-3.5 h-3.5 text-emerald-500" />
                         Copied!
                       </>
                     ) : (
@@ -164,7 +164,7 @@ export default function ApiPlayground() {
                     id="test-api-btn"
                     onClick={handleTestApi}
                     disabled={isTesting}
-                    className="bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white font-semibold text-[10px] tracking-wide uppercase px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all cursor-pointer"
+                    className="bg-[#2563EB] hover:bg-[#3B82F6] disabled:bg-[#2563EB]/50 text-white font-bold text-[10px] tracking-wide uppercase px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all cursor-pointer shadow-sm"
                   >
                     <Play className="w-3 h-3 fill-white" />
                     {isTesting ? 'Sending...' : 'Send Test Request'}
@@ -173,24 +173,24 @@ export default function ApiPlayground() {
               </div>
 
               {/* Code window block */}
-              <div className="bg-[#020617]/90 p-5 text-left border-b border-white/10 text-[11px] font-mono text-[#CBD5E1] overflow-x-auto h-52 leading-relaxed">
+              <div className="bg-slate-50/50 dark:bg-[#020617]/90 p-5 text-left border-b border-slate-200 dark:border-white/10 text-[11px] font-mono text-slate-700 dark:text-[#CBD5E1] overflow-x-auto h-52 leading-relaxed">
                 <pre>{activeSnippet}</pre>
               </div>
 
               {/* Live Terminal Test-Response Block */}
-              <div className="bg-[#020617] p-4 font-mono text-left text-[11px] rounded-b-xl border-t border-white/10">
+              <div className="bg-slate-100 dark:bg-[#020617] p-4 font-mono text-left text-[11px] rounded-b-xl border-t border-slate-200 dark:border-white/10">
                 <div className="flex items-center gap-1.5 text-slate-500 uppercase tracking-widest text-[9px] font-bold mb-3">
-                  <Terminal className="w-3.5 h-3.5 text-[#14B8A6]" />
+                  <Terminal className="w-3.5 h-3.5 text-[#2563EB] dark:text-[#14B8A6]" />
                   Request / Response Log
                   {testSuccess && (
-                    <span className="ml-auto text-emerald-400 flex items-center gap-1 font-mono text-[9px] tracking-normal uppercase bg-emerald-950/20 border border-emerald-500/30 px-1 py-0.2 rounded">
+                    <span className="ml-auto text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-mono text-[9px] tracking-normal uppercase bg-emerald-500/10 border border-emerald-500/20 px-1 py-0.2 rounded font-semibold">
                       <CheckCircle2 className="w-3 h-3" />
                       200 OK (SUCCESS)
                     </span>
                   )}
                 </div>
                 <pre className={`overflow-y-auto max-h-48 whitespace-pre-wrap leading-relaxed ${
-                  testSuccess ? 'text-cyan-300/90' : 'text-slate-500'
+                  testSuccess ? 'text-blue-600 dark:text-cyan-300/90' : 'text-slate-500'
                 }`}>
                   {terminalOutput}
                 </pre>
