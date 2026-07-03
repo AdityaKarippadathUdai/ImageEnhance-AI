@@ -12,9 +12,76 @@ interface TechnologyPageProps {
   onNavigate?: (view: string) => void;
 }
 
+const ARCH_NODE_TOOLTIPS: Record<string, { title: string; subtitle: string; desc: string; metric: string; color: string; centerX: number; centerY: number }> = {
+  lowres: {
+    title: 'Low-Res Input',
+    subtitle: 'Pipeline Ingest',
+    desc: 'Passes raw H × W × 3 float32 RGB pixel tensors into CUDA device memory.',
+    metric: 'Input Shape: [1, 3, H, W]',
+    color: 'from-blue-500 to-indigo-500',
+    centerX: 55,
+    centerY: 155,
+  },
+  preprocess: {
+    title: 'Preprocessing',
+    subtitle: 'Normalizer Layer',
+    desc: 'Normalizes pixels to stable [0.0, 1.0] float range with reflective mirror-padding.',
+    metric: 'Normalization: RGB / 255.0',
+    color: 'from-teal-500 to-cyan-500',
+    centerX: 175,
+    centerY: 160,
+  },
+  generator: {
+    title: 'RRDB Generator',
+    subtitle: 'Feature Synthesizer',
+    desc: '23 stacked Residual-in-Residual Dense Blocks that generate high-frequency textures.',
+    metric: 'Network Parameters: ~16.7M',
+    color: 'from-teal-500 to-emerald-500',
+    centerX: 295,
+    centerY: 150,
+  },
+  upsample: {
+    title: 'Pixel Shuffle',
+    subtitle: 'Upsampling Layer',
+    desc: 'Uses sub-pixel convolution to reorganize channels spatially for ultra-clean scaling.',
+    metric: 'Scale Factor: 2x / 4x Spatial',
+    color: 'from-emerald-500 to-green-500',
+    centerX: 417,
+    centerY: 160,
+  },
+  highres: {
+    title: 'Enhanced 4K',
+    subtitle: 'Output Stream',
+    desc: 'Clamps and denormalizes features back to sharp 8-bit/16-bit integer RGB channels.',
+    metric: 'Output Shape: [1, 3, 4H, 4W]',
+    color: 'from-emerald-500 to-teal-500',
+    centerX: 535,
+    centerY: 155,
+  },
+  discriminator: {
+    title: 'Discriminator',
+    subtitle: 'Adversarial Judge',
+    desc: 'A Relativistic average network scoring generated textures against high-resolution targets.',
+    metric: 'Formulation: Relativistic GAN',
+    color: 'from-red-500 to-rose-600',
+    centerX: 410,
+    centerY: 265,
+  },
+  loss: {
+    title: 'VGG Perceptual Loss',
+    subtitle: 'Optimization Criterion',
+    desc: 'Compares activation patterns from VGG-19 deep feature layers instead of pure pixels.',
+    metric: 'Active Layer: conv4_4 activation',
+    color: 'from-amber-500 to-orange-500',
+    centerX: 240,
+    centerY: 265,
+  },
+};
+
 export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
   // Section 2: Architecture interactive node selector
   const [activeArchNode, setActiveArchNode] = useState<string>('generator');
+  const [hoveredArchNode, setHoveredArchNode] = useState<string | null>(null);
 
   // Section 5: Why ESRGAN - Interactive slider state
   const [sliderPosition, setSliderPosition] = useState<number>(50);
@@ -551,7 +618,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 1: Low Res Image Input */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('lowres')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('lowres')}
+                    onMouseEnter={() => setHoveredArchNode('lowres')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="20" y="155" width="70" height="70" rx="12" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'lowres' ? '#2563EB' : 'currentColor'} strokeWidth={activeArchNode === 'lowres' ? '3' : '1'} />
                     <circle cx="55" cy="190" r="15" fill="#3B82F6" fillOpacity="0.1" />
                     <foreignObject x="43" y="178" width="24" height="24">
@@ -561,7 +633,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 2: Image Preprocessing */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('preprocess')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('preprocess')}
+                    onMouseEnter={() => setHoveredArchNode('preprocess')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="140" y="160" width="70" height="60" rx="10" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'preprocess' ? '#3B82F6' : 'currentColor'} strokeWidth={activeArchNode === 'preprocess' ? '3' : '1'} />
                     <circle cx="175" cy="190" r="12" fill="#14B8A6" fillOpacity="0.1" />
                     <foreignObject x="165" y="180" width="20" height="20">
@@ -571,7 +648,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 3: Generator Network (RRDB) */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('generator')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('generator')}
+                    onMouseEnter={() => setHoveredArchNode('generator')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="255" y="150" width="80" height="80" rx="14" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'generator' ? '#14B8A6' : 'currentColor'} strokeWidth={activeArchNode === 'generator' ? '3' : '1'} />
                     <circle cx="295" cy="190" r="16" fill="#14B8A6" fillOpacity="0.1" />
                     <foreignObject x="283" y="178" width="24" height="24">
@@ -581,7 +663,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 4: Upsampling Layer */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('upsample')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('upsample')}
+                    onMouseEnter={() => setHoveredArchNode('upsample')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="380" y="160" width="75" height="60" rx="10" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'upsample' ? '#10B981' : 'currentColor'} strokeWidth={activeArchNode === 'upsample' ? '3' : '1'} />
                     <circle cx="417" cy="190" r="14" fill="#10B981" fillOpacity="0.1" />
                     <foreignObject x="407" y="180" width="20" height="20">
@@ -591,7 +678,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 5: Enhanced High Res Image */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('highres')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('highres')}
+                    onMouseEnter={() => setHoveredArchNode('highres')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="500" y="155" width="70" height="70" rx="12" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'highres' ? '#10B981' : 'currentColor'} strokeWidth={activeArchNode === 'highres' ? '3' : '1'} />
                     <circle cx="535" cy="190" r="15" fill="#10B981" fillOpacity="0.1" />
                     <foreignObject x="523" y="178" width="24" height="24">
@@ -601,7 +693,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 6: Discriminator */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('discriminator')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('discriminator')}
+                    onMouseEnter={() => setHoveredArchNode('discriminator')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="370" y="265" width="80" height="50" rx="8" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'discriminator' ? '#EF4444' : 'currentColor'} strokeWidth={activeArchNode === 'discriminator' ? '3' : '1'} />
                     <circle cx="410" cy="290" r="10" fill="#EF4444" fillOpacity="0.1" />
                     <foreignObject x="402" y="282" width="16" height="16">
@@ -611,7 +708,12 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
                   </g>
 
                   {/* Node 7: Perceptual Loss */}
-                  <g className="cursor-pointer" onClick={() => setActiveArchNode('loss')}>
+                  <g 
+                    className="cursor-pointer" 
+                    onClick={() => setActiveArchNode('loss')}
+                    onMouseEnter={() => setHoveredArchNode('loss')}
+                    onMouseLeave={() => setHoveredArchNode(null)}
+                  >
                     <rect x="210" y="265" width="60" height="50" rx="8" fill="white" className="dark:fill-slate-900" stroke={activeArchNode === 'loss' ? '#F59E0B' : 'currentColor'} strokeWidth={activeArchNode === 'loss' ? '3' : '1'} />
                     <circle cx="240" cy="290" r="10" fill="#F59E0B" fillOpacity="0.1" />
                     <foreignObject x="232" y="282" width="16" height="16">
@@ -622,6 +724,53 @@ export default function TechnologyPage({ onNavigate }: TechnologyPageProps) {
 
                   {/* Defs consolidated at the top */}
                 </svg>
+
+                {/* Hover-based floating tooltip component */}
+                <AnimatePresence>
+                  {hoveredArchNode && ARCH_NODE_TOOLTIPS[hoveredArchNode] && (() => {
+                    const node = ARCH_NODE_TOOLTIPS[hoveredArchNode];
+                    const leftPercent = (node.centerX / 600) * 100;
+                    const topPercent = (node.centerY / 380) * 100;
+                    
+                    return (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.95, y: 5 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.95, y: 5 }}
+                        transition={{ duration: 0.15, ease: 'easeOut' }}
+                        className="absolute z-40 bg-slate-900/95 dark:bg-slate-950/95 text-white border border-white/10 rounded-2xl p-3.5 shadow-2xl backdrop-blur-md pointer-events-none w-56 text-left"
+                        style={{
+                          left: `${leftPercent}%`,
+                          top: `${topPercent}%`,
+                          transform: 'translate(-50%, -108%)',
+                        }}
+                      >
+                        {/* Tooltip pointer arrow */}
+                        <div className="absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-2.5 h-2.5 bg-slate-900 dark:bg-slate-950 border-r border-b border-white/10 rotate-45" />
+
+                        <div className="space-y-1.5 relative">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">
+                              {node.subtitle}
+                            </span>
+                            <span className={`w-2 h-2 rounded-full bg-gradient-to-tr ${node.color} animate-pulse`} />
+                          </div>
+                          <h4 className="text-xs font-bold font-sans tracking-tight text-white leading-tight">
+                            {node.title}
+                          </h4>
+                          <p className="text-[10px] text-slate-300 font-sans leading-normal">
+                            {node.desc}
+                          </p>
+                          <div className="pt-1.5 border-t border-white/5 flex items-center gap-1">
+                            <span className="text-[8px] font-mono text-slate-400 font-medium bg-white/5 px-1.5 py-0.5 rounded">
+                              {node.metric}
+                            </span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })()}
+                </AnimatePresence>
               </div>
 
               {/* Quick tip text */}
