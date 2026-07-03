@@ -10,26 +10,26 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/5 bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#020617]/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 md:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <div 
           onClick={() => scrollToSection('hero')} 
-          className="flex items-center gap-2 cursor-pointer select-none group"
+          className="flex items-center gap-3 cursor-pointer select-none group"
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 via-turquoise-500 to-amber-400 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.3)] group-hover:scale-105 transition-transform">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#2563EB] to-[#14B8A6] flex items-center justify-center shadow-lg shadow-blue-500/20 group-hover:scale-105 transition-transform">
             <Layers className="w-4.5 h-4.5 text-white" />
           </div>
-          <span className="text-sm font-bold tracking-tight text-white font-sans flex items-center gap-1">
+          <span className="text-sm font-bold tracking-tight text-white font-sans flex items-center gap-1.5">
             PixelBoost
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-turquoise-400 to-amber-300 font-mono text-[10px] font-semibold tracking-normal border border-turquoise-500/30 px-1 py-0.2 rounded-sm bg-turquoise-950/20">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#14B8A6] to-[#FBBF24] font-mono text-[10px] font-semibold tracking-normal border border-[#14B8A6]/30 px-1 py-0.2 rounded-sm bg-[#14B8A6]/10">
               AI
             </span>
           </span>
         </div>
 
         {/* Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-400">
+        <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#CBD5E1]">
           <button 
             onClick={() => scrollToSection('playground')} 
             className="hover:text-white transition-colors cursor-pointer"
@@ -62,20 +62,16 @@ export default function Header() {
           </button>
         </nav>
 
-        {/* Call to Action button */}
-        <div className="flex items-center gap-3">
-          <button 
-            onClick={() => scrollToSection('playground')}
-            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wide text-white bg-slate-900 border border-white/10 hover:border-white/20 hover:bg-slate-800 transition-all cursor-pointer hidden sm:block"
-          >
-            Launch Playground
-          </button>
-          <button 
-            onClick={() => scrollToSection('pricing')}
-            className="px-4 py-2 rounded-lg text-xs font-semibold tracking-wide text-slate-950 bg-gradient-to-r from-turquoise-400 to-blue-400 hover:from-turquoise-300 hover:to-blue-300 transition-all cursor-pointer shadow-lg shadow-turquoise-500/10 font-bold"
-          >
-            Get Started
-          </button>
+        {/* Call to Action & User Status Pill */}
+        <div className="flex items-center gap-4">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-[#FBBF24]/10 border border-[#FBBF24]/20 rounded-full">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#FBBF24] shadow-[0_0_8px_#FBBF24]"></div>
+            <span className="text-[9px] uppercase tracking-widest font-bold text-[#FBBF24]">Pro Member</span>
+          </div>
+
+          <div className="w-8 h-8 rounded-full border border-white/10 bg-[#111827] flex items-center justify-center text-xs font-bold text-white shadow-sm select-none">
+            JD
+          </div>
         </div>
       </div>
     </header>

@@ -3,7 +3,7 @@ import { Eye, ShieldAlert, Zap, Cpu, Sparkles, FileText, ImageIcon, Settings } f
 
 export default function BentoFeatures() {
   return (
-    <div id="features" className="w-full py-20 px-4 md:px-8 border-b border-white/5 bg-slate-950 relative">
+    <div id="features" className="w-full py-20 px-4 md:px-8 border-b border-white/10 bg-[#020617] relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_10%_30%,rgba(20,184,166,0.03),transparent_40%)] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto">
@@ -26,7 +26,7 @@ export default function BentoFeatures() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto text-left">
           
           {/* Card 1: 8x Zoom (Large - 2 cols wide) */}
-          <div className="md:col-span-2 bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/10 transition-colors min-h-[300px]">
+          <div className="md:col-span-2 bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/20 transition-all min-h-[300px]">
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-blue-600/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
             
             <div>
@@ -42,7 +42,7 @@ export default function BentoFeatures() {
             </div>
 
             {/* Simulated UI block */}
-            <div className="mt-6 p-4 bg-slate-950/80 border border-white/5 rounded-xl font-mono text-[10px] text-slate-500 flex flex-wrap gap-4 items-center justify-between">
+            <div className="mt-6 p-4 bg-[#020617]/80 border border-white/10 rounded-xl font-mono text-[10px] text-slate-500 flex flex-wrap gap-4 items-center justify-between">
               <span className="text-slate-300">Scale Mode: <strong className="text-cyan-400">8.00x Ultra-Zoom</strong></span>
               <span className="text-slate-300">GPU Workers: <strong className="text-emerald-400">Active (Warm)</strong></span>
               <div className="flex items-center gap-1">
@@ -53,7 +53,7 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 2: FaceRestore Pro (Small - 1 col) */}
-          <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/10 transition-colors min-h-[300px]">
+          <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/20 transition-all min-h-[300px]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-turquoise-500/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
             <div>
@@ -75,7 +75,7 @@ export default function BentoFeatures() {
           </div>
 
           {/* Card 3: TextRefine AI (Small - 1 col) */}
-          <div className="bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/10 transition-colors min-h-[300px]">
+          <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/20 transition-all min-h-[300px]">
             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-amber-500/10 to-transparent rounded-full blur-2xl pointer-events-none"></div>
 
             <div>
@@ -90,13 +90,13 @@ export default function BentoFeatures() {
               </p>
             </div>
 
-            <div className="mt-6 text-[10px] font-mono text-slate-500 border-t border-white/5 pt-3">
+            <div className="mt-6 text-[10px] font-mono text-slate-500 border-t border-white/10 pt-3">
               Input: <span className="line-through text-rose-400">blur_neon.png</span> → Output: <span className="text-emerald-400">crisp_neon.png</span>
             </div>
           </div>
 
           {/* Card 4: High-Performance SDK (Large - 2 cols wide) */}
-          <div className="md:col-span-2 bg-slate-900/40 backdrop-blur-md border border-white/5 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/10 transition-colors min-h-[300px]">
+          <div className="md:col-span-2 bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-8 relative overflow-hidden flex flex-col justify-between group hover:border-white/20 transition-all min-h-[300px]">
             <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-turquoise-500/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
 
             <div>
@@ -112,7 +112,7 @@ export default function BentoFeatures() {
             </div>
 
             {/* Mini performance metrics */}
-            <div className="mt-6 grid grid-cols-3 gap-4 border-t border-white/5 pt-4">
+            <div className="mt-6 grid grid-cols-3 gap-4 border-t border-white/10 pt-4">
               <div>
                 <div className="text-[10px] text-slate-500 font-mono uppercase">API LATENCY</div>
                 <div className="text-sm font-bold text-white">950ms</div>

@@ -55,7 +55,7 @@ export default function ApiPlayground() {
   const activeSnippet = API_CODE_SNIPPETS.find(s => s.language === activeLang)?.code.replace('pb_live_8f3d8...', apiKey) || '';
 
   return (
-    <div id="api-bench" className="w-full py-20 px-4 md:px-8 border-b border-white/5 bg-slate-950/60 relative">
+    <div id="api-bench" className="w-full py-20 px-4 md:px-8 border-b border-white/10 bg-[#020617]/60 relative">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,rgba(20,184,166,0.05),transparent_45%)] pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto">
@@ -70,13 +70,13 @@ export default function ApiPlayground() {
             <h2 className="text-3xl md:text-4xl font-sans font-bold tracking-tight text-white mb-4">
               Integrate 4K Upscaling in 5 Lines of Code
             </h2>
-            <p className="text-sm text-slate-400 leading-relaxed mb-8">
+            <p className="text-sm text-slate-400 leading-relaxed mb-8 font-sans">
               PixelBoost provides an ultra-low latency REST API designed to power design systems, e-commerce assets pipelines, and user-generated content applications. Up to 8x resolution multipliers are accessible programmatically.
             </p>
 
             {/* API Key management block */}
-            <div className="bg-slate-900/60 border border-white/5 rounded-2xl p-5 mb-6">
-              <div className="flex items-center justify-between mb-3">
+            <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-5 mb-6">
+              <div className="flex items-center justify-between mb-3 font-sans">
                 <span className="text-[11px] font-mono uppercase font-bold text-slate-400">Your Sandbox API Key</span>
                 <button
                   onClick={generateNewKey}
@@ -88,19 +88,19 @@ export default function ApiPlayground() {
 
               {/* Input copy suite */}
               <div className="flex gap-2">
-                <div className="flex-1 bg-slate-950 border border-white/5 rounded-xl px-3 py-2.5 font-mono text-[11px] text-slate-300 select-all truncate">
+                <div className="flex-1 bg-[#020617] border border-white/10 rounded-xl px-3 py-2.5 font-mono text-[11px] text-[#CBD5E1] select-all truncate">
                   {apiKey}
                 </div>
                 <button
                   onClick={() => copyToClipboard(apiKey, 'key')}
-                  className="bg-slate-950 hover:bg-slate-900 border border-white/10 hover:border-white/20 p-2.5 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0"
+                  className="bg-[#020617] hover:bg-[#111827] border border-white/10 hover:border-white/20 p-2.5 rounded-xl text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0"
                   title="Copy Key"
                 >
                   {copiedKey ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
 
-              <div className="flex items-start gap-1.5 mt-3 text-[10px] text-slate-500 leading-normal">
+              <div className="flex items-start gap-1.5 mt-3 text-[10px] text-slate-500 leading-normal font-sans">
                 <ShieldAlert className="w-3.5 h-3.5 text-slate-600 shrink-0 mt-0.5" />
                 <span>Keep this key secret. Authorization headers must use standard Bearer token encryption. Do not expose this key inside client-side bundles.</span>
               </div>
@@ -108,11 +108,11 @@ export default function ApiPlayground() {
 
             {/* Features lists */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-900/30 p-3 rounded-xl border border-white/5">
+              <div className="bg-[#111827]/20 p-3 rounded-xl border border-white/10 font-sans">
                 <div className="text-xs font-semibold text-slate-300">Warm Convolutions</div>
                 <div className="text-[10px] text-slate-500 mt-0.5 font-mono">1.1s average cold-start time</div>
               </div>
-              <div className="bg-slate-900/30 p-3 rounded-xl border border-white/5">
+              <div className="bg-[#111827]/20 p-3 rounded-xl border border-white/10 font-sans">
                 <div className="text-xs font-semibold text-slate-300">Webhook Callbacks</div>
                 <div className="text-[10px] text-slate-500 mt-0.5 font-mono">Receive scaled URLs directly</div>
               </div>
@@ -121,10 +121,10 @@ export default function ApiPlayground() {
 
           {/* RIGHT: Live Code & Terminal Suite (7 Cols) */}
           <div className="lg:col-span-7">
-            <div className="bg-slate-900/40 border border-white/5 rounded-2xl p-1.5 shadow-2xl overflow-hidden flex flex-col">
+            <div className="bg-[#111827]/40 backdrop-blur-md border border-white/10 rounded-2xl p-1.5 shadow-2xl overflow-hidden flex flex-col">
               
               {/* Tabs for Languages & Actions */}
-              <div className="flex items-center justify-between bg-slate-950/80 border-b border-white/5 rounded-t-xl px-4 py-2">
+              <div className="flex items-center justify-between bg-[#020617]/80 border-b border-white/10 rounded-t-xl px-4 py-2">
                 <div className="flex gap-2">
                   {['curl', 'javascript', 'python'].map((lang) => (
                     <button
@@ -132,7 +132,7 @@ export default function ApiPlayground() {
                       onClick={() => setActiveLang(lang)}
                       className={`px-2.5 py-1 text-[11px] font-mono font-medium rounded-md transition-colors cursor-pointer ${
                         activeLang === lang
-                          ? 'bg-slate-900 border border-white/10 text-cyan-400'
+                          ? 'bg-[#111827] border border-white/10 text-[#14B8A6]'
                           : 'text-slate-500 hover:text-slate-300'
                       }`}
                     >
@@ -173,14 +173,14 @@ export default function ApiPlayground() {
               </div>
 
               {/* Code window block */}
-              <div className="bg-slate-950 p-5 text-left border-b border-white/5 text-[11px] font-mono text-slate-300 overflow-x-auto h-52 leading-relaxed">
+              <div className="bg-[#020617]/90 p-5 text-left border-b border-white/10 text-[11px] font-mono text-[#CBD5E1] overflow-x-auto h-52 leading-relaxed">
                 <pre>{activeSnippet}</pre>
               </div>
 
               {/* Live Terminal Test-Response Block */}
-              <div className="bg-slate-950 p-4 font-mono text-left text-[11px] rounded-b-xl border-t border-white/5">
+              <div className="bg-[#020617] p-4 font-mono text-left text-[11px] rounded-b-xl border-t border-white/10">
                 <div className="flex items-center gap-1.5 text-slate-500 uppercase tracking-widest text-[9px] font-bold mb-3">
-                  <Terminal className="w-3.5 h-3.5 text-turquoise-400" />
+                  <Terminal className="w-3.5 h-3.5 text-[#14B8A6]" />
                   Request / Response Log
                   {testSuccess && (
                     <span className="ml-auto text-emerald-400 flex items-center gap-1 font-mono text-[9px] tracking-normal uppercase bg-emerald-950/20 border border-emerald-500/30 px-1 py-0.2 rounded">

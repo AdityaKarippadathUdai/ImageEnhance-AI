@@ -18,19 +18,19 @@ export default function Footer() {
   };
 
   return (
-    <footer className="w-full bg-slate-950 border-t border-white/5 pt-16 pb-8 px-4 md:px-8 text-left">
+    <footer className="w-full bg-[#020617] border-t border-white/10 pt-16 pb-8 px-4 md:px-8 text-left">
       <div className="max-w-7xl mx-auto">
         
         {/* Main layout links grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 mb-12">
           
           {/* Brand Col (4 Cols) */}
-          <div className="md:col-span-4 flex flex-col gap-4">
+          <div className="md:col-span-4 flex flex-col gap-4 font-sans">
             <div className="flex items-center gap-2 cursor-pointer select-none group" onClick={scrollTop}>
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#2563EB] to-[#14B8A6] flex items-center justify-center">
                 <Layers className="w-4 h-4 text-white" />
               </div>
-              <span className="text-sm font-bold tracking-tight text-white">PixelBoost <span className="font-mono text-[9px] text-cyan-400">AI</span></span>
+              <span className="text-sm font-bold tracking-tight text-white">PixelBoost <span className="font-mono text-[9px] text-[#14B8A6]">AI</span></span>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               SaaS platform for deep learning-powered image upscaling, detail synthesis, and face geometry restoration. Trusted by digital artists and studio pipelines.
@@ -49,13 +49,13 @@ export default function Footer() {
                     placeholder="name@company.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-slate-900 border border-white/5 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-cyan-500/50 transition-colors pl-8"
+                    className="w-full bg-[#111827] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-[#14B8A6]/50 transition-colors pl-8"
                   />
                   <Mail className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
                 </div>
                 <button
                   type="submit"
-                  className="bg-slate-900 hover:bg-slate-800 border border-white/10 text-xs text-slate-200 px-3.5 rounded-xl font-medium transition-colors cursor-pointer shrink-0"
+                  className="bg-[#111827] hover:bg-[#111827]/80 border border-white/10 text-xs text-slate-200 px-3.5 rounded-xl font-medium transition-colors cursor-pointer shrink-0"
                 >
                   {subscribed ? <Check className="w-4 h-4 text-emerald-400" /> : 'Subscribe'}
                 </button>
@@ -69,7 +69,7 @@ export default function Footer() {
           </div>
 
           {/* Links columns (8 Cols combined) */}
-          <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8">
+          <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-4 gap-8 font-sans">
             
             {/* Col 1 */}
             <div>
@@ -120,7 +120,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-sans">
           <div>
             &copy; 2026 PixelBoost AI Technologies, Inc. All rights reserved.
           </div>
