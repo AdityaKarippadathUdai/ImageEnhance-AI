@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
-import { Layers, Mail, Check, ArrowUp } from 'lucide-react';
+import React from 'react';
+import { Layers } from 'lucide-react';
 
 interface FooterProps {
   onNavigate?: (view: string) => void;
 }
 
 export default function Footer({ onNavigate }: FooterProps) {
-  const [email, setEmail] = useState<string>('');
-  const [subscribed, setSubscribed] = useState<boolean>(false);
-
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setSubscribed(true);
-    setEmail('');
-    setTimeout(() => setSubscribed(false), 4000);
-  };
-
   const scrollTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -47,37 +36,6 @@ export default function Footer({ onNavigate }: FooterProps) {
             <p className="text-xs text-slate-400 leading-relaxed max-w-sm">
               SaaS platform for deep learning-powered image upscaling, detail synthesis, and face geometry restoration. Trusted by digital artists and studio pipelines.
             </p>
-
-            {/* Newsletter Subscription input */}
-            <form onSubmit={handleSubscribe} className="mt-4 max-w-sm">
-              <label className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 block mb-2">
-                Stay updated on model releases
-              </label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <input
-                    type="email"
-                    required
-                    placeholder="name@company.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-[#111827] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none focus:border-[#14B8A6]/50 transition-colors pl-8"
-                  />
-                  <Mail className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-2.5" />
-                </div>
-                <button
-                  type="submit"
-                  className="bg-[#111827] hover:bg-[#111827]/80 border border-white/10 text-xs text-slate-200 px-3.5 rounded-xl font-medium transition-colors cursor-pointer shrink-0"
-                >
-                  {subscribed ? <Check className="w-4 h-4 text-emerald-400" /> : 'Subscribe'}
-                </button>
-              </div>
-              {subscribed && (
-                <span className="text-[10px] text-emerald-400 mt-1.5 block">
-                  Subscription logged! Thank you.
-                </span>
-              )}
-            </form>
           </div>
 
           {/* Links columns (8 Cols combined) */}
@@ -135,16 +93,6 @@ export default function Footer({ onNavigate }: FooterProps) {
         <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-sans">
           <div>
             &copy; 2026 PixelBoost AI Technologies, Inc. All rights reserved.
-          </div>
-          <div className="flex gap-6">
-            <a href="#" className="hover:text-slate-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-400 transition-colors">Terms of Service</a>
-            <button 
-              onClick={scrollTop} 
-              className="hover:text-slate-200 transition-colors flex items-center gap-1 font-mono text-[10px] font-bold"
-            >
-              Back To Top <ArrowUp className="w-3.5 h-3.5" />
-            </button>
           </div>
         </div>
 
