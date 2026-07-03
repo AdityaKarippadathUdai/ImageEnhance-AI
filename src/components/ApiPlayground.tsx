@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Terminal, Copy, Check, RefreshCw, Play, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import { API_CODE_SNIPPETS } from '../data';
+import { useToast } from '../context/ToastContext';
 
 export default function ApiPlayground() {
+  const toast = useToast();
   const [apiKey, setApiKey] = useState<string>('pb_live_8f3d8a7c2e91b5c00e4912f7193c72b');
   const [activeLang, setActiveLang] = useState<string>('curl');
   const [copiedKey, setCopiedKey] = useState<boolean>(false);
@@ -20,15 +22,18 @@ export default function ApiPlayground() {
       result += chars[Math.floor(Math.random() * chars.length)];
     }
     setApiKey(result);
+    toast.success('Successfully rolled a new sandbox API key.', { title: 'Credential Rolled' });
   };
 
   const copyToClipboard = (text: string, type: 'key' | 'code') => {
     navigator.clipboard.writeText(text);
     if (type === 'key') {
       setCopiedKey(true);
+      toast.success('API Key copied to system clipboard.', { title: 'Copied API Key' });
       setTimeout(() => setCopiedKey(false), 2000);
     } else {
       setCopiedCode(true);
+      toast.info('SDK Integration snippet copied to clipboard.', { title: 'Code Copied' });
       setTimeout(() => setCopiedCode(false), 2000);
     }
   };
@@ -36,6 +41,7 @@ export default function ApiPlayground() {
   const handleTestApi = () => {
     setIsTesting(true);
     setTestSuccess(false);
+    toast.info('Sending mock secure request to PixelBoost API endpoints...', { title: 'API Connection Initiated' });
     setTerminalOutput(`$ sending request to api.pixelboost.ai/v1/upscale...\n> Headers: { Authorization: Bearer ${apiKey.substring(0, 15)}... }\n> Body: { scale: 4, model: "pixelboost-ultra", image_url: "https://example.com/asset.jpg" }`);
 
     setTimeout(() => {
@@ -46,6 +52,7 @@ export default function ApiPlayground() {
           setTerminalOutput(prev => prev + `\n\nHTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  "status": "success",\n  "request_id": "req_84f9b8c02c",\n  "processing_time_ms": 1142,\n  "scale": 4,\n  "model": "pixelboost-ultra",\n  "original_dimensions": "1024x768",\n  "upscaled_dimensions": "4096x3072",\n  "upscaled_url": "https://cdn.pixelboost.ai/outputs/84f9b8c02c_4x.png",\n  "credits_consumed": 2\n}`);
           setIsTesting(false);
           setTestSuccess(true);
+          toast.success('API Response: 200 OK. Dynamic asset upscaled successfully.', { title: 'Simulation Succeeded' });
         }, 800);
       }, 500);
     }, 600);

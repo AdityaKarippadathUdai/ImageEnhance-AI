@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Sliders, Sparkles, Image as ImageIcon, Download, AlertCircle, Cpu, RefreshCw, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ProcessingStep } from '../types';
+import { useToast } from '../context/ToastContext';
 
 export default function UpscalePlayground() {
+  const toast = useToast();
   const [customImage, setCustomImage] = useState<string | null>(null);
   const [customFileName, setCustomFileName] = useState<string>('');
   const [customWidth, setCustomWidth] = useState<number>(0);
@@ -91,13 +93,17 @@ export default function UpscalePlayground() {
     setUploadError(null);
 
     if (!file.type.startsWith('image/')) {
-      setUploadError('Please upload a valid image file (PNG, JPEG, WebP).');
+      const errorMsg = 'Please upload a valid image file (PNG, JPEG, WebP).';
+      setUploadError(errorMsg);
+      toast.error(errorMsg, { title: 'Upload Failed' });
       return;
     }
 
     // Strict 10 MB maximum size validation limit
     if (file.size > 10 * 1024 * 1024) {
-      setUploadError('File exceeds the maximum size of 10 MB. Please optimize your asset.');
+      const errorMsg = 'File exceeds the maximum size of 10 MB. Please optimize your asset.';
+      setUploadError(errorMsg);
+      toast.error(errorMsg, { title: 'File Too Large' });
       return;
     }
     
@@ -114,6 +120,7 @@ export default function UpscalePlayground() {
         img.onload = () => {
           setCustomWidth(img.width);
           setCustomHeight(img.height);
+          toast.success(`"${file.name}" loaded successfully. Ready to upscale!`, { title: 'Image Uploaded' });
         };
         img.src = resultSrc;
       }
@@ -130,12 +137,14 @@ export default function UpscalePlayground() {
     setCustomHeight(600);
     setCustomImage('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800');
     setHasProcessed(false);
+    toast.success('Misty Alpine Ridge demo loaded successfully!', { title: 'Demo Image Loaded' });
   };
 
   // Trigger simulated AI Super Resolution
   const handleEnhance = () => {
     if (isProcessing) return;
 
+    toast.info('Initializing Real-ESRGAN super-resolution neural pipeline...', { title: 'Processing Started', duration: 3000 });
     setIsProcessing(true);
     setProgress(0);
     setProcessingLogs([]);
@@ -150,6 +159,7 @@ export default function UpscalePlayground() {
         setHasProcessed(true);
         setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Real-ESRGAN super-resolution complete! Enhanced output generated in 3.1s`]);
         setProgress(100);
+        toast.success(`Super-resolution complete! Restored fine-grained textures at ${scaleFactor}x scale.`, { title: 'Upscale Complete' });
         return;
       }
 
@@ -189,6 +199,7 @@ export default function UpscalePlayground() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    toast.success('Triggered download for your high-resolution upscaled image.', { title: 'Downloading Asset' });
   };
 
   // Determine display sources
