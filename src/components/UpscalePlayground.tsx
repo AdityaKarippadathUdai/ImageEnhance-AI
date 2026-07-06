@@ -5,10 +5,12 @@ import { ProcessingStep } from '../types';
 import { useToast } from '../context/ToastContext';
 import ImageMetadataPanel from './ImageMetadataPanel';
 import EnhancedImageSummary from './EnhancedImageSummary';
+import { enhanceImage } from '../services/api';
 
 export default function UpscalePlayground() {
   const toast = useToast();
   const [customImage, setCustomImage] = useState<string | null>(null);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [customFileName, setCustomFileName] = useState<string>('');
   const [customWidth, setCustomWidth] = useState<number>(0);
   const [customHeight, setCustomHeight] = useState<number>(0);
@@ -121,6 +123,7 @@ export default function UpscalePlayground() {
     
     setCustomFileName(file.name);
     setFileSize(file.size);
+    setUploadedFile(file);
     
     // Extract format: e.g. "image/png" -> "PNG", "image/jpeg" -> "JPEG", "image/webp" -> "WebP"
     const format = file.type ? file.type.split('/')[1]?.toUpperCase() : file.name.split('.').pop()?.toUpperCase() || 'PNG';
@@ -183,6 +186,7 @@ export default function UpscalePlayground() {
   const handleLoadDemo = (e: React.MouseEvent) => {
     e.stopPropagation(); // prevent triggering parent file picker click
     setUploadError(null);
+    setUploadedFile(null);
     setCustomFileName('misty_alpine_ridge_demo.jpg');
     setCustomWidth(800);
     setCustomHeight(600);
@@ -194,8 +198,8 @@ export default function UpscalePlayground() {
     toast.success('Misty Alpine Ridge demo loaded successfully!', { title: 'Demo Image Loaded' });
   };
 
-  // Trigger simulated AI Super Resolution
-  const handleEnhance = () => {
+  // Trigger simulated AI Super Resolution using the Enhance Image API service
+  const handleEnhance = async () => {
     if (isProcessing) return;
 
     toast.info('Initializing Real-ESRGAN super-resolution neural pipeline...', { title: 'Processing Started', duration: 3000 });
@@ -205,61 +209,73 @@ export default function UpscalePlayground() {
     setCurrentStepIndex(0);
     setPipelineStatus('success');
     setPipelineError(null);
+    setHasProcessed(false);
     
-    const startTimeStamp = Date.now();
-    let currentStep = 0;
-    const totalSteps = steps.length;
+    try {
+      // 1. Trigger the reusable API service passing either the File object or demo URL/base64 fallback
+      const apiPromise = enhanceImage({
+        imageFile: uploadedFile,
+        imageBase64: customImage,
+        scaleFactor: scaleFactor,
+      });
 
-    const runStep = () => {
-      if (currentStep >= totalSteps) {
-        const endTimeStamp = Date.now();
-        const durationSec = (endTimeStamp - startTimeStamp) / 1000;
-        setActualProcessingTime(durationSec);
-
-        // Simulate a failure for specific test cases (e.g. filename has 'fail' or 'corrupt')
-        if (customFileName.toLowerCase().includes('fail') || customFileName.toLowerCase().includes('corrupt')) {
-          setPipelineStatus('failed');
-          setPipelineError('CUDA memory allocation failure: The convolutional neural network failed to partition the source texture into sufficiently small GPU tiled streams.');
-          setIsProcessing(false);
-          setHasProcessed(true);
-          setProcessingLogs(prev => [...prev, `❌ [FATAL] Real-ESRGAN x4+ pipeline terminated unexpectedly. GPU Core out of memory.`]);
-          toast.error(`Super-resolution failed! Out of VRAM memory for targeted factor.`, { title: 'Upscale Failed' });
-          return;
-        }
-
-        setIsProcessing(false);
-        setHasProcessed(true);
-        setProcessingLogs(prev => [...prev, `⚡ [SUCCESS] Real-ESRGAN super-resolution complete! Enhanced output generated in ${durationSec.toFixed(1)}s`]);
-        setProgress(100);
-        toast.success(`Super-resolution complete! Restored fine-grained textures at ${scaleFactor}x scale.`, { title: 'Upscale Complete' });
-        return;
-      }
-
-      const step = steps[currentStep];
-      setCurrentStepIndex(currentStep);
-      setProcessingLogs(prev => [...prev, `[${currentStep + 1}/${totalSteps}] ${step.label}`]);
-
-      // Animate progress up during the step duration
-      const duration = step.duration;
-      const startTime = Date.now();
-      const startProgress = (currentStep / totalSteps) * 100;
-      const targetProgress = ((currentStep + 1) / totalSteps) * 100;
-
+      // Display realistic progressive loading logs and increments in parallel
+      let logIndex = 0;
+      const totalStepsCount = steps.length;
+      
       const interval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const ratio = Math.min(1, elapsed / duration);
-        const currentProgress = startProgress + ratio * (targetProgress - startProgress);
-        setProgress(Math.round(currentProgress));
-
-        if (ratio === 1) {
+        if (logIndex < totalStepsCount) {
+          const step = steps[logIndex];
+          setCurrentStepIndex(logIndex);
+          setProcessingLogs(prev => [
+            ...prev,
+            `[${logIndex + 1}/${totalStepsCount + 1}] ${step.label}`
+          ]);
+          // Progress bar ticks dynamically from 0% to 90%
+          setProgress(Math.round(((logIndex + 1) / (totalStepsCount + 1)) * 90));
+          logIndex++;
+        } else {
           clearInterval(interval);
-          currentStep++;
-          setTimeout(runStep, 200); // Small pause between steps
         }
-      }, 50);
-    };
+      }, 600);
 
-    runStep();
+      // Await actual response from the modular api service
+      const response = await apiPromise;
+      
+      clearInterval(interval);
+      
+      // Finalizing step logs
+      setProcessingLogs(prev => [
+        ...prev,
+        `[${totalStepsCount + 1}/${totalStepsCount + 1}] Finalizing tensor dimensions and compiling high-resolution JPEG streams...`,
+        `⚡ [SUCCESS] ${response.statusMessage} (${response.aiModelUsed})`
+      ]);
+      
+      setProgress(100);
+      setActualProcessingTime(response.processingTime);
+      
+      // Update output metrics based on response values
+      setFileSize(response.outputFileSize);
+      const format = response.outputFileFormat;
+      setFileFormat(format === 'JPEG' ? 'JPG' : format);
+      
+      setPipelineStatus('success');
+      setIsProcessing(false);
+      setHasProcessed(true);
+      
+      toast.success(`Super-resolution complete! Restored fine-grained textures at ${scaleFactor}x scale.`, { title: 'Upscale Complete' });
+    } catch (error: any) {
+      console.error('Enhancement pipeline execution failed:', error);
+      setPipelineStatus('failed');
+      setPipelineError(error.message || 'The convolutional neural network failed to partition the source texture.');
+      setProcessingLogs(prev => [
+        ...prev, 
+        `❌ [FATAL] Real-ESRGAN pipeline terminated unexpectedly: ${error.message || 'CUDA Error'}`
+      ]);
+      setIsProcessing(false);
+      setHasProcessed(true);
+      toast.error(error.message || 'Super-resolution failed.', { title: 'Upscale Failed' });
+    }
   };
 
   // Triggers browser download of currently upscaled image
@@ -745,6 +761,7 @@ export default function UpscalePlayground() {
                     }}
                     onReset={() => {
                       setCustomImage(null);
+                      setUploadedFile(null);
                       setCustomFileName('');
                       setCustomWidth(0);
                       setCustomHeight(0);
