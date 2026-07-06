@@ -124,6 +124,7 @@ export default function Header({
     { name: 'Home', section: 'home', target: 'hero' },
     { name: 'Features', section: 'features', target: 'features' },
     { name: 'Technology', section: 'technology', target: 'playground' },
+    { name: 'Components', section: 'components', target: 'components-guide-page' },
   ];
 
   return (
