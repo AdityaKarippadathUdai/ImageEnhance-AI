@@ -59,8 +59,9 @@ function ToastCard({ item, onDismiss }: { item: ToastItem; onDismiss: (id: strin
         setTimeLeft((prev) => {
           const next = prev - 50;
           if (next <= 0) {
-            onDismiss(item.id);
             if (timerRef.current) clearInterval(timerRef.current);
+            // Safely defer the dismissal to the next event loop tick
+            setTimeout(() => onDismiss(item.id), 0);
             return 0;
           }
           return next;
