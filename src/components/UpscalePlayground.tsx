@@ -49,6 +49,7 @@ export default function UpscalePlayground() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragActive, setIsDragActive] = useState<boolean>(false);
+  const [dragCounter, setDragCounter] = useState<number>(0);
 
   const steps: ProcessingStep[] = [
     { id: 'init', label: 'Initializing Real-ESRGAN neural weights and allocating GPU memory...', duration: 600, status: 'idle' },
@@ -77,20 +78,36 @@ export default function UpscalePlayground() {
   }, []);
 
   // Drag and drop mechanics
-  const handleDrag = (e: React.DragEvent) => {
+  const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setIsDragActive(true);
-    } else if (e.type === 'dragleave') {
-      setIsDragActive(false);
-    }
+    setDragCounter(prev => prev + 1);
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragCounter(prev => {
+      const next = prev - 1;
+      if (next <= 0) {
+        setIsDragActive(false);
+        return 0;
+      }
+      return next;
+    });
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragActive(false);
+    setDragCounter(0);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       processUploadedFile(e.dataTransfer.files[0]);
@@ -295,7 +312,36 @@ export default function UpscalePlayground() {
   const displayUpscaled = customImage || '';
 
   return (
-    <div id="playground" className="w-full py-16 px-4 md:px-8 border-b border-slate-200 dark:border-white/10 bg-slate-50/20 dark:bg-[#020617]/50 backdrop-blur-md relative overflow-hidden">
+    <div 
+      id="playground" 
+      onDragEnter={handleDragEnter}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className="w-full py-16 px-4 md:px-8 border-b border-slate-200 dark:border-white/10 bg-slate-50/20 dark:bg-[#020617]/50 backdrop-blur-md relative overflow-hidden"
+    >
+      {/* Immersive Workspace-Wide Drag and Drop Overlay */}
+      <AnimatePresence>
+        {isDragActive && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-blue-500/10 dark:bg-blue-950/40 backdrop-blur-xl border-4 border-dashed border-blue-500 dark:border-blue-400 rounded-3xl m-3 pointer-events-none"
+          >
+            <div className="p-6 rounded-full bg-white dark:bg-slate-900 shadow-2xl flex items-center justify-center text-blue-500 dark:text-blue-400 animate-bounce border border-blue-500/20">
+              <Upload className="w-12 h-12" />
+            </div>
+            <h3 className="mt-5 text-2xl font-sans font-bold text-blue-600 dark:text-blue-400 tracking-tight">
+              Drop your image anywhere
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 font-sans mt-2 max-w-xs text-center leading-relaxed">
+              Release to upload and instantly view metadata metrics and upscaling options.
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Injecting CSS Keyframes specifically for the dashing border effect */}
       <style>{`
         @keyframes border-dash {
@@ -339,13 +385,13 @@ export default function UpscalePlayground() {
             >
               <div
                 id="premium-dropzone"
-                onDragEnter={handleDrag}
-                onDragOver={handleDrag}
-                onDragLeave={handleDrag}
+                onDragEnter={handleDragEnter}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
                 className={`relative w-full max-w-2xl rounded-3xl p-10 md:p-12 backdrop-blur-xl bg-white dark:bg-[#090d16]/75 border border-slate-200 dark:border-white/10 hover:border-[#2563EB]/35 dark:hover:border-blue-500/35 transition-all duration-300 group overflow-hidden cursor-pointer text-center select-none shadow-[0_10px_50px_rgba(37,99,235,0.06)] dark:shadow-[0_0_80px_rgba(37,99,235,0.12)] ${
-                  isDragActive ? 'border-blue-450 bg-blue-500/5' : ''
+                  isDragActive ? 'border-blue-500 dark:border-blue-400 bg-blue-500/5 dark:bg-blue-500/10 scale-[1.01]' : ''
                 }`}
               >
                 {/* SVG Animated Dashed Border */}
