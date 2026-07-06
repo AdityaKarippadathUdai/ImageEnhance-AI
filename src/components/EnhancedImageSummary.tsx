@@ -12,7 +12,6 @@ import {
   Cpu, 
   RefreshCw, 
   Eye, 
-  Share2, 
   Sparkles 
 } from 'lucide-react';
 
@@ -65,19 +64,6 @@ export default function EnhancedImageSummary({
 
   const outputWidth = originalWidth * scaleFactor;
   const outputHeight = originalHeight * scaleFactor;
-
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Real-ESRGAN Enhanced Image',
-        text: `Check out my enhanced image: ${fileName} upscaled to ${outputWidth}x${outputHeight}!`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Application link copied to clipboard!');
-    }
-  };
 
   if (status === 'failed') {
     return (
@@ -274,15 +260,6 @@ export default function EnhancedImageSummary({
             >
               <Eye className="w-4 h-4 text-blue-500" />
               Compare Before & After
-            </button>
-
-            {/* Share */}
-            <button
-              onClick={handleShare}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-semibold text-xs text-slate-700 dark:text-slate-250 bg-slate-100 hover:bg-slate-200 dark:bg-white/5 dark:hover:bg-white/10 border border-slate-200/80 dark:border-white/5 transition-all cursor-pointer"
-            >
-              <Share2 className="w-4 h-4 text-teal-500" />
-              Share
             </button>
 
             {/* Enhance Another Image */}
