@@ -7,6 +7,7 @@ import BentoFeatures from './components/BentoFeatures';
 import FeaturesPage from './components/FeaturesPage';
 import TechnologyPage from './components/TechnologyPage';
 import ComponentsPage from './components/ComponentsPage';
+import DocumentationPage from './components/DocumentationPage';
 import Footer from './components/Footer';
 
 export default function App() {
@@ -193,6 +194,18 @@ export default function App() {
             transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             <ComponentsPage />
+          </motion.div>
+        )}
+
+        {currentView === 'documentation' && (
+          <motion.div
+            key="documentation-page"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            <DocumentationPage onNavigate={setCurrentView} />
           </motion.div>
         )}
       </AnimatePresence>

@@ -95,7 +95,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <h4 className="text-[10px] uppercase font-mono tracking-wider font-bold text-slate-500 mb-4">Resources</h4>
               <ul className="flex flex-col gap-3 text-xs text-slate-600 dark:text-slate-400 font-medium">
                 <li>
-                  <a href="#" className="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+                  <a href="#documentation" onClick={(e) => handleLinkClick(e, 'documentation')} className="hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                     Documentation
                   </a>
