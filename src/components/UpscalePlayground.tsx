@@ -26,8 +26,12 @@ export default function UpscalePlayground() {
   const [pipelineStatus, setPipelineStatus] = useState<'success' | 'failed'>('success');
   const [pipelineError, setPipelineError] = useState<string | null>(null);
   
-  // Upscaling parameter states - restricted to Real-ESRGAN compatible 2x and 4x
-  const [scaleFactor, setScaleFactor] = useState<number>(4);
+  // Upscaling parameter states supporting Real-ESRGAN models
+  const [selectedModel, setSelectedModel] = useState<'RealESRGAN_x2plus' | 'RealESRGAN_x4plus'>('RealESRGAN_x4plus');
+  const [outputFormat, setOutputFormat] = useState<'PNG' | 'JPG'>('JPG');
+  const [faceRestore, setFaceRestore] = useState<boolean>(false);
+  const [enhancedImage, setEnhancedImage] = useState<string | null>(null);
+  const scaleFactor = selectedModel === 'RealESRGAN_x2plus' ? 2 : 4;
 
   // Dimensions & resolution details
   const beforeRes = customImage 
@@ -54,7 +58,7 @@ export default function UpscalePlayground() {
   const steps: ProcessingStep[] = [
     { id: 'init', label: 'Initializing Real-ESRGAN neural weights and allocating GPU memory...', duration: 600, status: 'idle' },
     { id: 'denoise', label: 'Analyzing compression patterns & correcting tile borders...', duration: 800, status: 'idle' },
-    { id: 'convolve', label: 'Executing Real-ESRGAN x4+ multi-pass residual dense blocks...', duration: 1200, status: 'idle' },
+    { id: 'convolve', label: `Executing ${selectedModel === 'RealESRGAN_x2plus' ? 'Real-ESRGAN x2+' : 'Real-ESRGAN x4+'} multi-pass residual dense blocks...`, duration: 1200, status: 'idle' },
     { id: 'refine', label: 'Reconstructing sub-pixel high-frequency edges and micro-textures...', duration: 700, status: 'idle' },
   ];
 
@@ -229,11 +233,14 @@ export default function UpscalePlayground() {
     setHasProcessed(false);
     
     try {
-      // 1. Trigger the reusable API service passing either the File object or demo URL/base64 fallback
+      // 1. Trigger the reusable API service passing parameters ready for the future FastAPI backend
       const apiPromise = enhanceImage({
         imageFile: uploadedFile,
-        imageBase64: customImage,
-        scaleFactor: scaleFactor,
+        model: selectedModel,
+        outputFormat: outputFormat,
+        faceRestore: faceRestore,
+        inputWidth: customWidth || 800,
+        inputHeight: customHeight || 600,
       });
 
       // Display realistic progressive loading logs and increments in parallel
@@ -265,22 +272,23 @@ export default function UpscalePlayground() {
       setProcessingLogs(prev => [
         ...prev,
         `[${totalStepsCount + 1}/${totalStepsCount + 1}] Finalizing tensor dimensions and compiling high-resolution JPEG streams...`,
-        `⚡ [SUCCESS] ${response.statusMessage} (${response.aiModelUsed})`
+        `⚡ [SUCCESS] ${response.statusMessage} (${response.selectedModelName})`
       ]);
       
       setProgress(100);
       setActualProcessingTime(response.processingTime);
+      setEnhancedImage(response.enhancedImageUrl);
       
       // Update output metrics based on response values
       setFileSize(response.outputFileSize);
-      const format = response.outputFileFormat;
+      const format = response.outputFormat;
       setFileFormat(format === 'JPEG' ? 'JPG' : format);
       
       setPipelineStatus('success');
       setIsProcessing(false);
       setHasProcessed(true);
       
-      toast.success(`Super-resolution complete! Restored fine-grained textures at ${scaleFactor}x scale.`, { title: 'Upscale Complete' });
+      toast.success(`Super-resolution complete! Restored fine-grained textures using ${selectedModel}.`, { title: 'Upscale Complete' });
     } catch (error: any) {
       console.error('Enhancement pipeline execution failed:', error);
       setPipelineStatus('failed');
@@ -309,7 +317,7 @@ export default function UpscalePlayground() {
 
   // Determine display sources
   const displayOriginal = customImage || '';
-  const displayUpscaled = customImage || '';
+  const displayUpscaled = enhancedImage || customImage || '';
 
   return (
     <div 
@@ -493,7 +501,7 @@ export default function UpscalePlayground() {
                   fileSize={null}
                   fileFormat={null}
                   colorMode={null}
-                  scaleFactor={scaleFactor}
+                  model={selectedModel}
                 />
               </div>
             </motion.div>
@@ -524,6 +532,7 @@ export default function UpscalePlayground() {
                       <button
                         onClick={() => {
                           setCustomImage(null);
+                          setEnhancedImage(null);
                           setCustomFileName('');
                           setCustomWidth(0);
                           setCustomHeight(0);
@@ -562,7 +571,7 @@ export default function UpscalePlayground() {
                   fileSize={fileSize}
                   fileFormat={fileFormat}
                   colorMode={colorMode}
-                  scaleFactor={scaleFactor}
+                  model={selectedModel}
                 />
 
                 {/* Parametrization Drawer */}
@@ -574,25 +583,107 @@ export default function UpscalePlayground() {
                     Upscale Parameters
                   </h3>
 
-                  {/* Scale Options */}
+                  {/* Model Selector (Selectable Tiles) */}
                   <div className="mb-6">
-                    <label className="text-xs font-semibold text-slate-700 dark:text-[#CBD5E1] block mb-2 font-sans uppercase tracking-wider">
-                      Scale Factor
+                    <label className="text-xs font-bold text-slate-700 dark:text-[#CBD5E1] block mb-3 font-sans uppercase tracking-wider text-left">
+                      Real-ESRGAN Model
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {[2, 4].map((factor) => (
-                        <button
-                          key={factor}
-                          onClick={() => setScaleFactor(factor)}
-                          className={`py-2 text-xs font-bold rounded-lg border transition-all cursor-pointer ${
-                            scaleFactor === factor
-                              ? 'bg-gradient-to-r from-[#2563EB] to-[#14B8A6] border-transparent text-white shadow-lg shadow-blue-500/10 font-sans'
-                              : 'bg-slate-50 border-slate-200 text-slate-500 hover:border-slate-300 dark:bg-[#020617] dark:border-white/10 dark:text-slate-400 dark:hover:border-white/20 font-sans'
-                          }`}
-                        >
-                          {factor}x
-                        </button>
-                      ))}
+                    <div className="flex flex-col gap-3">
+                      {[
+                        {
+                          id: 'RealESRGAN_x2plus' as const,
+                          name: 'RealESRGAN_x2plus',
+                          badge: '2x Super Resolution',
+                          description: 'Faster inference, lower GPU memory footprint. Best for general photos.',
+                        },
+                        {
+                          id: 'RealESRGAN_x4plus' as const,
+                          name: 'RealESRGAN_x4plus',
+                          badge: '4x Super Resolution',
+                          description: 'Highest reconstruction fidelity & texture synthesis. Demands more VRAM.',
+                        },
+                      ].map((m) => {
+                        const isSelected = selectedModel === m.id;
+                        return (
+                          <button
+                            key={m.id}
+                            type="button"
+                            onClick={() => setSelectedModel(m.id)}
+                            className={`group p-3 rounded-xl border text-left transition-all duration-300 cursor-pointer relative overflow-hidden flex flex-col gap-1.5 ${
+                              isSelected
+                                ? 'bg-gradient-to-r from-blue-600/10 via-teal-500/5 to-emerald-500/10 border-[#14B8A6] shadow-md shadow-blue-500/5'
+                                : 'bg-slate-50/50 border-slate-200 hover:border-slate-300 dark:bg-[#020617]/50 dark:border-white/10 dark:hover:border-white/20'
+                            }`}
+                          >
+                            {/* Accent highlight bar */}
+                            {isSelected && (
+                              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-[#2563EB] to-[#14B8A6]" />
+                            )}
+                            <div className="flex items-center justify-between">
+                              <span className={`text-xs font-bold font-mono tracking-tight transition-colors ${
+                                isSelected ? 'text-[#2563EB] dark:text-cyan-400' : 'text-slate-800 dark:text-slate-200'
+                              }`}>
+                                {m.name}
+                              </span>
+                              <span className={`text-[9px] font-bold font-mono px-2 py-0.5 rounded-full border ${
+                                isSelected
+                                  ? 'bg-gradient-to-r from-blue-500/10 to-teal-500/10 text-blue-600 dark:text-teal-450 border-teal-500/20'
+                                  : 'bg-slate-100 text-slate-500 dark:bg-white/5 dark:text-slate-400 border-slate-200 dark:border-white/5'
+                              }`}>
+                                {m.badge}
+                              </span>
+                            </div>
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-sans leading-relaxed">
+                              {m.description}
+                            </p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Additional Controls */}
+                  <div className="grid grid-cols-2 gap-3 mb-6">
+                    {/* Output Format */}
+                    <div className="flex flex-col gap-1.5 text-left">
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest font-sans">
+                        Output Format
+                      </label>
+                      <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-[#020617] p-1 rounded-lg border border-slate-200 dark:border-white/5">
+                        {(['PNG', 'JPG'] as const).map((fmt) => (
+                          <button
+                            key={fmt}
+                            type="button"
+                            onClick={() => setOutputFormat(fmt)}
+                            className={`py-1 text-[10px] font-bold rounded-md font-mono transition-all cursor-pointer ${
+                              outputFormat === fmt
+                                ? 'bg-white dark:bg-[#111827] text-slate-800 dark:text-white shadow-sm border border-slate-200/50 dark:border-white/10'
+                                : 'text-slate-550 dark:text-slate-450 hover:text-slate-800 dark:hover:text-slate-200'
+                            }`}
+                          >
+                            {fmt}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Face Restoration Toggle */}
+                    <div className="flex flex-col gap-1.5 text-left">
+                      <label className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest font-sans">
+                        Face Restore
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setFaceRestore(prev => !prev)}
+                        className={`w-full py-1.5 px-3 text-[10px] font-bold rounded-lg border flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
+                          faceRestore
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400 shadow-sm'
+                            : 'bg-slate-50 border-slate-200 text-slate-550 hover:border-slate-300 dark:bg-[#020617] dark:border-white/10 dark:text-slate-450 dark:hover:border-white/20'
+                        }`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full ${faceRestore ? 'bg-emerald-500 animate-pulse' : 'bg-slate-400 dark:bg-slate-600'}`} />
+                        {faceRestore ? 'Enabled' : 'Disabled'}
+                      </button>
                     </div>
                   </div>
 
@@ -614,7 +705,7 @@ export default function UpscalePlayground() {
                       </div>
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">AI Model</span>
-                        <span className="text-xs font-bold text-slate-850 dark:text-white font-sans">Real-ESRGAN x4+</span>
+                        <span className="text-xs font-bold text-slate-850 dark:text-white font-sans">{selectedModel === 'RealESRGAN_x2plus' ? 'RealESRGAN x2+' : 'RealESRGAN x4+'}</span>
                       </div>
                       <div>
                         <span className="text-[9px] text-slate-500 font-mono uppercase block tracking-wider">Device</span>
@@ -790,13 +881,14 @@ export default function UpscalePlayground() {
                 {/* Enhanced Image Summary & Action Suite */}
                 {hasProcessed ? (
                   <EnhancedImageSummary
-                    imageSrc={customImage}
+                    imageSrc={displayUpscaled}
                     fileName={customFileName}
                     originalWidth={customWidth}
                     originalHeight={customHeight}
                     fileSize={fileSize}
                     fileFormat={fileFormat}
-                    scaleFactor={scaleFactor}
+                    model={selectedModel}
+                    faceRestore={faceRestore}
                     processingTime={actualProcessingTime}
                     status={pipelineStatus}
                     errorMessage={pipelineError}
@@ -807,6 +899,7 @@ export default function UpscalePlayground() {
                     }}
                     onReset={() => {
                       setCustomImage(null);
+                      setEnhancedImage(null);
                       setUploadedFile(null);
                       setCustomFileName('');
                       setCustomWidth(0);

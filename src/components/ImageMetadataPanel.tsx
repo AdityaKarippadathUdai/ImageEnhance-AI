@@ -19,7 +19,7 @@ interface ImageMetadataPanelProps {
   fileSize: number | null; // in bytes
   fileFormat: string | null;
   colorMode: string | null;
-  scaleFactor: number;
+  model: 'RealESRGAN_x2plus' | 'RealESRGAN_x4plus';
 }
 
 export default function ImageMetadataPanel({
@@ -29,9 +29,10 @@ export default function ImageMetadataPanel({
   fileSize,
   fileFormat,
   colorMode,
-  scaleFactor
+  model
 }: ImageMetadataPanelProps) {
   const isUploaded = !!fileName;
+  const scaleFactor = model === 'RealESRGAN_x2plus' ? 2 : 4;
 
   // Formatting helpers
   const formatFileSize = (bytes: number | null): string => {
@@ -145,8 +146,8 @@ export default function ImageMetadataPanel({
     },
     {
       id: 'scale',
-      label: 'Upscaling Factor',
-      value: isUploaded ? `${scaleFactor}×` : '—',
+      label: 'Selected AI Model',
+      value: isUploaded ? (model === 'RealESRGAN_x2plus' ? 'RealESRGAN x2+' : 'RealESRGAN x4+') : '—',
       icon: Sliders,
       gradient: 'from-violet-500/10 to-fuchsia-500/10 text-violet-600 dark:text-violet-400 border-violet-500/10',
     }

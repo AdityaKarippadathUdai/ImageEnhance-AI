@@ -65,7 +65,7 @@ export default function ComponentsPage() {
               fileSize={1430221}
               fileFormat="image/jpeg"
               colorMode="RGB"
-              scaleFactor={4}
+              model="RealESRGAN_x4plus"
             />
           </div>
         );
@@ -80,7 +80,8 @@ export default function ComponentsPage() {
               originalHeight={768}
               fileSize={820400}
               fileFormat="JPEG"
-              scaleFactor={4}
+              model="RealESRGAN_x4plus"
+              faceRestore={false}
               processingTime={2.8}
               status="success"
               onDownload={() => alert('Download triggered!')}

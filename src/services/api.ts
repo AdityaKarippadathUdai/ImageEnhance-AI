@@ -17,24 +17,25 @@ export interface EnhanceImageRequest {
   imageFile: File | null;
 
   /**
-   * Fallback base64-encoded image string if file object is unavailable.
+   * The selected Real-ESRGAN model.
    */
-  imageBase64?: string | null;
+  model: 'RealESRGAN_x2plus' | 'RealESRGAN_x4plus';
 
   /**
-   * Spherically scales the texture map. Restricted to ESRGAN weight classes (2 or 4).
+   * Output image format.
    */
-  scaleFactor: number;
-
-  /**
-   * Optional real-time denoise level (0 to 100).
-   */
-  denoiseLevel?: number;
+  outputFormat: 'PNG' | 'JPG';
 
   /**
    * Optional face restoration toggle using auxiliary CodeFormer/GFPGAN model pipelines.
    */
   faceRestore?: boolean;
+
+  /**
+   * Optional dimensions of the input image for mock calculations.
+   */
+  inputWidth?: number;
+  inputHeight?: number;
 }
 
 export interface EnhanceImageResponse {
@@ -44,19 +45,29 @@ export interface EnhanceImageResponse {
   success: boolean;
 
   /**
-   * The high-fidelity reconstructed image URL or base64 data stream.
+   * The high-fidelity reconstructed image URL.
    */
-  enhancedImageSrc: string;
+  enhancedImageUrl: string;
 
   /**
-   * Output dimension width in pixels (inputWidth * scaleFactor).
+   * The precise convolutional model architecture weights invoked.
    */
-  outputWidth: number;
+  selectedModelName: string;
 
   /**
-   * Output dimension height in pixels (inputHeight * scaleFactor).
+   * Input dimension as string.
    */
-  outputHeight: number;
+  inputResolution: string;
+
+  /**
+   * Output dimension as string.
+   */
+  outputResolution: string;
+
+  /**
+   * Precise GPU inference duration in seconds.
+   */
+  processingTime: number;
 
   /**
    * Approximate or exact size of the resulting file in bytes.
@@ -64,19 +75,9 @@ export interface EnhanceImageResponse {
   outputFileSize: number;
 
   /**
-   * Output file format extension (e.g. "PNG", "JPG").
+   * Output file format extension.
    */
-  outputFileFormat: string;
-
-  /**
-   * Precise GPU inference and routing overhead duration in seconds.
-   */
-  processingTime: number;
-
-  /**
-   * The precise convolutional model architecture weights invoked.
-   */
-  aiModelUsed: string;
+  outputFormat: string;
 
   /**
    * Verbose success or error message from the neural pipeline.
@@ -93,7 +94,7 @@ export interface EnhanceImageResponse {
  * 3. Set up appropriate environment variables (e.g., VITE_API_URL).
  * 4. Ensure the endpoint returns JSON matching the `EnhanceImageResponse` interface.
  * 
- * @param request Parameter inputs including the File, base64 string, and upscaling settings.
+ * @param request Parameter inputs including the File, selected model, and output format settings.
  * @returns Promise resolving to the high-fidelity output payload.
  */
 export async function enhanceImage(request: EnhanceImageRequest): Promise<EnhanceImageResponse> {
@@ -102,26 +103,26 @@ export async function enhanceImage(request: EnhanceImageRequest): Promise<Enhanc
   
   if (request.imageFile) {
     formData.append('image', request.imageFile);
-  } else if (request.imageBase64) {
-    // If only base64 is available, we convert it to a Blob or append the string
-    formData.append('image_base64', request.imageBase64);
+  } else {
+    // Fallback placeholder file for demo run when no user file is uploaded
+    formData.append('image', new File([new Blob()], 'misty_alpine_ridge_demo.jpg', { type: 'image/jpeg' }));
   }
   
-  formData.append('scale_factor', request.scaleFactor.toString());
-  formData.append('denoise_level', (request.denoiseLevel ?? 0).toString());
+  formData.append('model', request.model);
+  formData.append('output_format', request.outputFormat);
   formData.append('face_restore', (request.faceRestore ?? false).toString());
 
   // Log the payload details for development inspection
   console.log('--- FUTURE API REQUEST FORM-DATA PREPARED ---');
-  console.log('Scale Factor:', request.scaleFactor);
-  console.log('Denoise Level:', request.denoiseLevel);
+  console.log('Model Selected:', request.model);
+  console.log('Output Format:', request.outputFormat);
   console.log('Face Restore Active:', request.faceRestore);
   if (request.imageFile) {
     console.log('File Name:', request.imageFile.name);
     console.log('File Size:', request.imageFile.size, 'bytes');
     console.log('File MIME Type:', request.imageFile.type);
   } else {
-    console.log('File Source: Using demo base64/URL asset');
+    console.log('File Source: Using demo fallback asset');
   }
   console.log('----------------------------------------------');
 
@@ -129,6 +130,7 @@ export async function enhanceImage(request: EnhanceImageRequest): Promise<Enhanc
   // ==========================================
   // TODO: IMPLEMENT REAL FASTAPI POST ENDPOINT HERE
   // ==========================================
+  // To connect the real FastAPI backend, un-comment this block and adjust the mapping if needed.
   try {
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
     const response = await fetch(`${API_URL}/enhance`, {
@@ -155,8 +157,12 @@ export async function enhanceImage(request: EnhanceImageRequest): Promise<Enhanc
   // CURRENT ROBUST HIGH-FIDELITY SIMULATION BLOCK
   // ==========================================
   return new Promise((resolve, reject) => {
-    // Simulate real-world network and GPU model loading latency (approx 2.5s to 3.5s)
-    const latency = 2500 + Math.random() * 1000;
+    // Generate simulated processing time based on selected model
+    // RealESRGAN_x2plus is faster; RealESRGAN_x4plus takes slightly longer
+    const isX2 = request.model === 'RealESRGAN_x2plus';
+    const minLatency = isX2 ? 1000 : 2500;
+    const extraLatency = isX2 ? 800 : 1000;
+    const latency = minLatency + Math.random() * extraLatency;
     
     setTimeout(() => {
       const fileName = request.imageFile?.name || 'misty_alpine_ridge_demo.jpg';
@@ -165,34 +171,34 @@ export async function enhanceImage(request: EnhanceImageRequest): Promise<Enhanc
       if (fileName.toLowerCase().includes('fail') || fileName.toLowerCase().includes('corrupt')) {
         return reject(
           new Error(
-            'CUDA Core Out of Memory: Target output buffer exceeds local GPU tile VRAM allocation bounds. Please lower the scaling factor.'
+            'CUDA Core Out of Memory: Target output buffer exceeds local GPU tile VRAM allocation bounds. Please lower the scaling model.'
           )
         );
       }
 
       // Read mock details
-      const sourceWidth = 800; // default simulation size
-      const sourceHeight = 600;
-      const targetWidth = sourceWidth * request.scaleFactor;
-      const targetHeight = sourceHeight * request.scaleFactor;
+      const sourceWidth = request.inputWidth || 800;
+      const sourceHeight = request.inputHeight || 600;
+      const scaleMultiplier = isX2 ? 2 : 4;
+      const targetWidth = sourceWidth * scaleMultiplier;
+      const targetHeight = sourceHeight * scaleMultiplier;
       
       // Calculate realistic file size growth for super-resolution output
-      // (a 4x upscaled photo usually grows weight ~11.5x due to high-frequency texturing)
       const inputSize = request.imageFile?.size || 145408;
-      const sizeMultiplier = request.scaleFactor === 2 ? 3.2 : 11.5;
+      const sizeMultiplier = isX2 ? 3.2 : 11.5;
       const outputSize = Math.round(inputSize * sizeMultiplier);
 
       // Return premium high-quality enhanced asset payload
       resolve({
         success: true,
         // Using high-fidelity demo sample to serve as the upscaled response
-        enhancedImageSrc: request.imageBase64 || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800',
-        outputWidth: targetWidth,
-        outputHeight: targetHeight,
-        outputFileSize: outputSize,
-        outputFileFormat: request.imageFile?.type ? request.imageFile.type.split('/')[1]?.toUpperCase() : 'JPG',
+        enhancedImageUrl: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=800',
+        selectedModelName: request.model,
+        inputResolution: `${sourceWidth} × ${sourceHeight} px`,
+        outputResolution: `${targetWidth} × ${targetHeight} px`,
         processingTime: parseFloat((latency / 1000).toFixed(2)),
-        aiModelUsed: `Real-ESRGAN x4+${request.faceRestore ? ' + GFPGAN' : ''}`,
+        outputFileSize: outputSize,
+        outputFormat: request.outputFormat,
         statusMessage: 'Neural network inference completed successfully.'
       });
     }, latency);

@@ -22,7 +22,8 @@ interface EnhancedImageSummaryProps {
   originalHeight: number;
   fileSize: number | null;
   fileFormat: string | null;
-  scaleFactor: number;
+  model: 'RealESRGAN_x2plus' | 'RealESRGAN_x4plus';
+  faceRestore?: boolean;
   processingTime: number; // in seconds
   status: 'success' | 'failed';
   errorMessage?: string | null;
@@ -39,7 +40,8 @@ export default function EnhancedImageSummary({
   originalHeight,
   fileSize,
   fileFormat,
-  scaleFactor,
+  model,
+  faceRestore,
   processingTime,
   status,
   errorMessage,
@@ -48,6 +50,8 @@ export default function EnhancedImageSummary({
   onReset,
   onRetry
 }: EnhancedImageSummaryProps) {
+  
+  const scaleFactor = model === 'RealESRGAN_x2plus' ? 2 : 4;
   
   // Formatting helpers
   const formatFileSize = (bytes: number | null, multiplier: number = 1): string => {
@@ -166,7 +170,7 @@ export default function EnhancedImageSummary({
               {/* Verified Badge */}
               <span className="inline-flex items-center gap-1 text-[9px] font-bold font-mono px-2.5 py-1 bg-gradient-to-r from-blue-500/10 to-teal-500/10 text-blue-600 dark:text-teal-400 rounded-full border border-teal-500/20 uppercase tracking-wider">
                 <Sparkles className="w-3 h-3 animate-spin" style={{ animationDuration: '3s' }} />
-                Real-ESRGAN x4+
+                {model}
               </span>
             </div>
 
@@ -232,10 +236,10 @@ export default function EnhancedImageSummary({
               <div className="bg-slate-50 dark:bg-[#111827]/30 border border-slate-200/60 dark:border-white/5 rounded-xl p-3 hover:border-slate-300 dark:hover:border-white/10 transition-all">
                 <div className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-wider">
                   <Cpu className="w-3.5 h-3.5 text-pink-500" />
-                  AI Engine
+                  AI Model
                 </div>
-                <div className="text-xs font-bold font-sans text-slate-850 dark:text-slate-100 mt-1.5">
-                  ESRGAN x4+
+                <div className="text-xs font-bold font-sans text-slate-850 dark:text-slate-100 mt-1.5 truncate" title={`${model}${faceRestore ? ' + GFPGAN' : ''}`}>
+                  {model}{faceRestore ? ' + GFPGAN' : ''}
                 </div>
               </div>
 
